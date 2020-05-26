@@ -1,5 +1,7 @@
 const GOOGLE_COLORS = ["#f4c20d", "#4885ed", "#3cba54"] // yellow, blue, green
-const ICONS = ["code", "education", "me", "work", "achievement", "contact"];
+const ICONS = ["contact", "code", "education", "me", "work", "achievement"];
+
+let currentIndex = ICONS.indexOf("me");
 
 const FULL_CIRCLE_DEGREE = 360;
 const SATELLITE_NUMBER = 6;
@@ -9,7 +11,7 @@ const SATELLITE_RADIUS = 90;
 const parentdiv = document.getElementById('parentdiv');
 
 function main() {
-  for (let i = 1; i <= SATELLITE_NUMBER; ++i) {
+  for (let i = 0; i < SATELLITE_NUMBER; i++) {
     childDiv = createChild(i);
     parentdiv.appendChild(childDiv);
   }
@@ -37,21 +39,32 @@ const convertCoordinateToString = (coor) => {
 
 const createChild = (i) => {
   const { x, y } = getCoordinates(i);
+  const color = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
   let childDiv = document.createElement('div');
 
   childDiv.className = 'div2';
+  childDiv.id = "child-" + i;
   childDiv.style.position = 'absolute';
   childDiv.style.top = x;
   childDiv.style.left = y;
-  childDiv.style.backgroundColor = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
 
-  if (ICONS[i-1] !== undefined) {
+  if (i === currentIndex) {
+    childDiv.style.backgroundColor = color;
+  }
+  childDiv.style.border = "solid 3px " + color;
+
+  childDiv.addEventListener("click", function() {
+    childDiv.style.backgroundColor = color;
+    if (currentIndex !== i) {
+      document.getElementById("child-" + currentIndex).style.backgroundColor = "";
+      currentIndex = i;
+    }
+  });
+
+  if (ICONS[i] !== undefined) {
     let icon = document.createElement('img');
-    icon.src = '../images/' + ICONS[i-1] + '-icon.png';
-    icon.style.width = "50%";
-    icon.style.position = 'absolute';
-    icon.style.top = "30%";
-    icon.style.left = "25%";
+    icon.src = '../images/icons/' + ICONS[i] + '-icon.png';
+    icon.className = "icon";
     childDiv.appendChild(icon);
   }
 
