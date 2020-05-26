@@ -10,6 +10,14 @@ const SATELLITE_RADIUS = 90;
 
 const parentdiv = document.getElementById('parentdiv');
 
+const showContent = (contentType) => {
+  document.getElementById(contentType).style.display = "block";
+}
+
+const hideContent = (contentType) => {
+  document.getElementById(contentType).style.display = "none";
+}
+
 const convertCoordinateToString = (coor) => {
   const offsetToParentCenter = parseInt(parentdiv.offsetWidth / 2); //assumes parent is square
   const offsetToChildCenter = SATELLITE_RADIUS / 2;
@@ -20,7 +28,7 @@ const convertCoordinateToString = (coor) => {
 const calculateCoordinate = (mathFunc, i) => {
   const div = FULL_CIRCLE_DEGREE / SATELLITE_NUMBER;
   const numb = mathFunc((div * i) * (Math.PI / 180)) * RADIUS;
-  return convertCoordinateToString(numb);
+  return numb;
 }
 
 const createIcon = (name) => {
@@ -42,8 +50,8 @@ function setProps(element, i) {
   const color = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
   element.className = 'div2';
   element.style.position = 'absolute';
-  element.style.top = x;
-  element.style.left = y;
+  element.style.top = convertCoordinateToString(x);
+  element.style.left = convertCoordinateToString(y);
   element.style.border = "solid 3px " + color;
 }
 
@@ -53,9 +61,11 @@ const createChild = (i) => {
   
   childDiv.addEventListener("click", function() {
     if (contents.includes(i)) {
+      hideContent(ICONS[i]);
       childDiv.style.backgroundColor = "";
       contents.splice(contents.indexOf(i), 1);
     } else {
+      showContent(ICONS[i]);
       const color = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
       childDiv.style.backgroundColor = color;
       contents.push(i);
