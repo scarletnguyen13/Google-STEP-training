@@ -1,19 +1,50 @@
 const GOOGLE_COLORS = ["#3cba54", "#f4c20d", "#4885ed"] // green, yellow, blue
 
-var div = 360 / 6;
-var radius = 250;
-var parentdiv = document.getElementById('parentdiv');
-var offsetToParentCenter = parseInt(parentdiv.offsetWidth / 2); //assumes parent is square
-var offsetToChildCenter = 45;
-var totalOffset = offsetToParentCenter - offsetToChildCenter;
-for (var i = 1; i <= 6; ++i) {
-  var childdiv = document.createElement('div');
-  childdiv.className = 'div2';
-  childdiv.style.position = 'absolute';
-  var y = Math.sin((div * i) * (Math.PI / 180)) * radius;
-  var x = Math.cos((div * i) * (Math.PI / 180)) * radius;
-  childdiv.style.top = (y + totalOffset).toString() + "px";
-  childdiv.style.left = (x + totalOffset).toString() + "px";
-  childdiv.style.backgroundColor = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
-  parentdiv.appendChild(childdiv);
+const FULL_CIRCLE_DEGREE = 360;
+const SATELLITE_NUMBER = 6;
+const RADIUS = 250;
+const SATELLITE_RADIUS = 90;
+
+const parentdiv = document.getElementById('parentdiv');
+
+function main() {
+  for (let i = 1; i <= SATELLITE_NUMBER; ++i) {
+    childDiv = createChild(i);
+    parentdiv.appendChild(childDiv);
+  }
 }
+
+const getCoordinates = (i) => {
+  return { 
+    x: calculateCoordinate(Math.cos, i),
+    y: calculateCoordinate(Math.sin, i)
+  };
+}
+
+const calculateCoordinate = (mathFunc, i) => {
+  const div = FULL_CIRCLE_DEGREE / SATELLITE_NUMBER;
+  const numb = mathFunc((div * i) * (Math.PI / 180)) * RADIUS;
+  return convertCoordinateToString(numb);
+}
+
+const convertCoordinateToString = (coor) => {
+  const offsetToParentCenter = parseInt(parentdiv.offsetWidth / 2); //assumes parent is square
+  const offsetToChildCenter = SATELLITE_RADIUS / 2;
+  const totalOffset = offsetToParentCenter - offsetToChildCenter;
+  return (coor + totalOffset).toString() + "px";
+}
+
+const createChild = (i) => {
+  const { x, y } = getCoordinates(i);
+  let childDiv = document.createElement('div');
+
+  childDiv.className = 'div2';
+  childDiv.style.position = 'absolute';
+  childDiv.style.top = x;
+  childDiv.style.left = y;
+  childDiv.style.backgroundColor = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
+
+  return childDiv;
+}
+
+main();
