@@ -1,15 +1,17 @@
-#content {
-  margin-left: auto;
-  margin-right: auto;
-  width: 650px;
+body {
+  margin: 0;
 }
 
-#greeting-container {
-  margin-top: 20px;
+#content {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .gallery-image {
-  padding: 20px;
   width: 650px;
   height: auto;
 }
