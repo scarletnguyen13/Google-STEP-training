@@ -11,7 +11,24 @@ body {
   align-items: center;
 }
 
-.gallery-image {
-  width: 650px;
-  height: auto;
+#logo {
+  width: 150px;
+  position: absolute;
+  top: 20%;
+}
+
+#parentdiv {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  /* border: rgb(255, 0, 0) solid 5px; */
+  border-radius: 150px;
+  margin: 150px;
+}
+
+.div2 {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 90px;
 }
