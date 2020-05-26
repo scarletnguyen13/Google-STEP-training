@@ -1,4 +1,5 @@
-const GOOGLE_COLORS = ["#3cba54", "#f4c20d", "#4885ed"] // green, yellow, blue
+const GOOGLE_COLORS = ["#f4c20d", "#4885ed", "#3cba54"] // yellow, blue, green
+const ICONS = ["code", "education", "me", "work", "achievement", "contact"];
 
 const FULL_CIRCLE_DEGREE = 360;
 const SATELLITE_NUMBER = 6;
@@ -43,6 +44,16 @@ const createChild = (i) => {
   childDiv.style.top = x;
   childDiv.style.left = y;
   childDiv.style.backgroundColor = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
+
+  if (ICONS[i-1] !== undefined) {
+    let icon = document.createElement('img');
+    icon.src = '../images/' + ICONS[i-1] + '-icon.png';
+    icon.style.width = "50%";
+    icon.style.position = 'absolute';
+    icon.style.top = "30%";
+    icon.style.left = "25%";
+    childDiv.appendChild(icon);
+  }
 
   return childDiv;
 }
