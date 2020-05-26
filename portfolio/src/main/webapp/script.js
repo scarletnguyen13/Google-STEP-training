@@ -26,3 +26,7 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+import generateCircles from './scripts/generateCircles.js';
+
+generateCircles();

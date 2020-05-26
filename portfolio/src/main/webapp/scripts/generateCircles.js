@@ -10,11 +10,24 @@ const SATELLITE_RADIUS = 90;
 
 const parentdiv = document.getElementById('parentdiv');
 
-function main() {
-  for (let i = 0; i < SATELLITE_NUMBER; i++) {
-    childDiv = createChild(i);
-    parentdiv.appendChild(childDiv);
-  }
+const convertCoordinateToString = (coor) => {
+  const offsetToParentCenter = parseInt(parentdiv.offsetWidth / 2); //assumes parent is square
+  const offsetToChildCenter = SATELLITE_RADIUS / 2;
+  const totalOffset = offsetToParentCenter - offsetToChildCenter;
+  return (coor + totalOffset).toString() + "px";
+}
+
+const calculateCoordinate = (mathFunc, i) => {
+  const div = FULL_CIRCLE_DEGREE / SATELLITE_NUMBER;
+  const numb = mathFunc((div * i) * (Math.PI / 180)) * RADIUS;
+  return convertCoordinateToString(numb);
+}
+
+const createIcon = (name) => {
+  let icon = document.createElement('img');
+  icon.src = '../images/icons/' + name + '-icon.png';
+  icon.className = "icon";
+  return icon;
 }
 
 const getCoordinates = (i) => {
@@ -24,17 +37,14 @@ const getCoordinates = (i) => {
   };
 }
 
-const calculateCoordinate = (mathFunc, i) => {
-  const div = FULL_CIRCLE_DEGREE / SATELLITE_NUMBER;
-  const numb = mathFunc((div * i) * (Math.PI / 180)) * RADIUS;
-  return convertCoordinateToString(numb);
-}
-
-const convertCoordinateToString = (coor) => {
-  const offsetToParentCenter = parseInt(parentdiv.offsetWidth / 2); //assumes parent is square
-  const offsetToChildCenter = SATELLITE_RADIUS / 2;
-  const totalOffset = offsetToParentCenter - offsetToChildCenter;
-  return (coor + totalOffset).toString() + "px";
+function setProps(element, i) {
+  const { x, y } = getCoordinates(i);
+  const color = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
+  element.className = 'div2';
+  element.style.position = 'absolute';
+  element.style.top = x;
+  element.style.left = y;
+  element.style.border = "solid 3px " + color;
 }
 
 const createChild = (i) => {
@@ -60,21 +70,11 @@ const createChild = (i) => {
   return childDiv;
 }
 
-const createIcon = (name) => {
-  let icon = document.createElement('img');
-  icon.src = '../images/icons/' + name + '-icon.png';
-  icon.className = "icon";
-  return icon;
+function generateCircles() {
+  for (let i = 0; i < SATELLITE_NUMBER; i++) {
+    const childDiv = createChild(i);
+    parentdiv.appendChild(childDiv);
+  }
 }
 
-function setProps(element, i) {
-  const { x, y } = getCoordinates(i);
-  const color = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
-  element.className = 'div2';
-  element.style.position = 'absolute';
-  element.style.top = x;
-  element.style.left = y;
-  element.style.border = "solid 3px " + color;
-}
-
-main();
+export default generateCircles;

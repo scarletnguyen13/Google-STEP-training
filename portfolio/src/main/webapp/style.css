@@ -15,6 +15,7 @@ body {
   width: 150px;
   position: absolute;
   top: 20%;
+  user-select: none;
 }
 
 #parentdiv {
@@ -38,4 +39,5 @@ body {
   position: absolute;
   top: 30%;
   left: 25%;
+  user-select: none;
 }
