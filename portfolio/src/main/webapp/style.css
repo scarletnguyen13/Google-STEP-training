@@ -7,3 +7,9 @@
 #greeting-container {
   margin-top: 20px;
 }
+
+.gallery-image {
+  padding: 20px;
+  width: 650px;
+  height: auto;
+}
