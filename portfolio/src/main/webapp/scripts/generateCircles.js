@@ -1,7 +1,7 @@
 const GOOGLE_COLORS = ["#f4c20d", "#4885ed", "#3cba54"] // yellow, blue, green
 const ICONS = ["contact", "code", "education", "me", "work", "achievement"];
 
-let currentIndex = ICONS.indexOf("me");
+let contents = [];
 
 const FULL_CIRCLE_DEGREE = 360;
 const SATELLITE_NUMBER = 6;
@@ -38,37 +38,43 @@ const convertCoordinateToString = (coor) => {
 }
 
 const createChild = (i) => {
-  const { x, y } = getCoordinates(i);
-  const color = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
   let childDiv = document.createElement('div');
-
-  childDiv.className = 'div2';
-  childDiv.id = "child-" + i;
-  childDiv.style.position = 'absolute';
-  childDiv.style.top = x;
-  childDiv.style.left = y;
-
-  if (i === currentIndex) {
-    childDiv.style.backgroundColor = color;
-  }
-  childDiv.style.border = "solid 3px " + color;
-
+  setProps(childDiv, i);
+  
   childDiv.addEventListener("click", function() {
-    childDiv.style.backgroundColor = color;
-    if (currentIndex !== i) {
-      document.getElementById("child-" + currentIndex).style.backgroundColor = "";
-      currentIndex = i;
+    if (contents.includes(i)) {
+      childDiv.style.backgroundColor = "";
+      contents.splice(contents.indexOf(i), 1);
+    } else {
+      const color = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
+      childDiv.style.backgroundColor = color;
+      contents.push(i);
     }
   });
 
   if (ICONS[i] !== undefined) {
-    let icon = document.createElement('img');
-    icon.src = '../images/icons/' + ICONS[i] + '-icon.png';
-    icon.className = "icon";
+    const icon = createIcon(ICONS[i]);
     childDiv.appendChild(icon);
   }
 
   return childDiv;
+}
+
+const createIcon = (name) => {
+  let icon = document.createElement('img');
+  icon.src = '../images/icons/' + name + '-icon.png';
+  icon.className = "icon";
+  return icon;
+}
+
+function setProps(element, i) {
+  const { x, y } = getCoordinates(i);
+  const color = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
+  element.className = 'div2';
+  element.style.position = 'absolute';
+  element.style.top = x;
+  element.style.left = y;
+  element.style.border = "solid 3px " + color;
 }
 
 main();
