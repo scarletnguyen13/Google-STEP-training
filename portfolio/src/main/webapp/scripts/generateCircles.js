@@ -24,7 +24,7 @@ const calculateCoordinate = (mathFunc, i) => {
 }
 
 const createIcon = (name) => {
-  let icon = document.createElement('img');
+  const icon = document.createElement('img');
   icon.src = '../images/icons/' + name + '-icon.png';
   icon.className = "icon";
   return icon;
@@ -48,7 +48,7 @@ function setProps(element, i) {
 }
 
 const createChild = (i) => {
-  let childDiv = document.createElement('div');
+  const childDiv = document.createElement('div');
   setProps(childDiv, i);
   
   childDiv.addEventListener("click", function() {
