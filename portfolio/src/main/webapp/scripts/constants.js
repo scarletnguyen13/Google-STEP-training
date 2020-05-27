@@ -10,10 +10,12 @@ const CONTACT = {
   'github': 'https://github.com/scarletnguyen13',
   'linkedin': 'https://www.linkedin.com/in/scarletnguyen/',
   'resume': '../docs/resume.pdf',
-  'email': 'https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=scarlet.nguyen01@gmail.com',
+  'email': 'https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=' +
+           'scarlet.nguyen01@gmail.com',
   'facebook': 'https://www.facebook.com/scarletnguyen13',
   'instagram': 'https://www.instagram.com/scarletnguyen13_/',
-  'cbc': 'https://www.cbc.ca/news/canada/british-columbia/teen-hackathon-winner-app-female-students-tech-industry-1.4902520'
+  'cbc': 'https://www.cbc.ca/news/canada/british-columbia/' +
+         'teen-hackathon-winner-app-female-students-tech-industry-1.4902520'
 }
 
 export { 
