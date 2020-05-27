@@ -11,7 +11,7 @@ class IconGenerator {
     return icons;
   }
 
-  createIcon = (name) => {
+  createIcon(name) {
     const icon = document.createElement('img');
     icon.src = `../images/icons/${name}-icon.png`;
     icon.className = 'icon';
