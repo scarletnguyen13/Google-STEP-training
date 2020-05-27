@@ -28,13 +28,9 @@ body {
 
 .satellite {
   position: absolute;
-  width: 90px;
-  height: 90px;
-  border-radius: 90px;
 }
 
 .icon {
-  width: 50%;
   position: absolute;
   top: 30%;
   left: 25%;

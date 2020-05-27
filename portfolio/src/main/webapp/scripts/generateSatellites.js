@@ -14,8 +14,13 @@ import {
   toggleContent
 } from './helpers.js';
 
+import IconGenerator from './models/IconGenerator.js'; 
+
 const contents = [];
 const menuContainer = document.getElementById('menu-container');
+
+const iconGenerator = new IconGenerator('50%');
+const icons = iconGenerator.generate(ICONS);
 
 const calculateCoordinate = (satelliteIndex) => {
   const angleBetweenTwoSatellites = FULL_CIRCLE_DEGREE / NUMBER_OF_SATELLITE;
@@ -33,18 +38,14 @@ const calculateCoordinate = (satelliteIndex) => {
   return { x, y };
 }
 
-const createIcon = (name) => {
-  const icon = document.createElement('img');
-  icon.src = `../images/icons/${name}-icon.png`;
-  icon.className = 'icon';
-  return icon;
-}
-
 function setSatelliteProps(satellite, satelliteIndex) {
   const { x, y } = calculateCoordinate(satelliteIndex);
   const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
   satellite.className = 'satellite';
   const style = {
+    width: convertNumberToPixelString(SATELLITE_RADIUS),
+    height: convertNumberToPixelString(SATELLITE_RADIUS),
+    borderRadius: convertNumberToPixelString(SATELLITE_RADIUS),
     position: 'absolute',
     top: convertNumberToPixelString(x),
     left: convertNumberToPixelString(y),
@@ -58,25 +59,25 @@ const createSatellite = (satelliteIndex) => {
   setSatelliteProps(satellite, satelliteIndex);
   
   satellite.addEventListener('click', function() {
-    if (contents.includes(satelliteIndex)) {
-      toggleContent(ICONS[satelliteIndex], false);
+    const isContentVisible = contents.includes(satelliteIndex);
+    if (isContentVisible) {
+      toggleContent(ICONS[satelliteIndex], !isContentVisible);
       satellite.style.backgroundColor = '';
       contents.splice(contents.indexOf(satelliteIndex), 1);
     } else {
-      toggleContent(ICONS[satelliteIndex], true);
+      toggleContent(ICONS[satelliteIndex], isContentVisible);
       const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
       satellite.style.backgroundColor = color;
       contents.push(satelliteIndex);
     }
   });
 
-  const icon = createIcon(ICONS[satelliteIndex]);
-  satellite.appendChild(icon);
+  satellite.appendChild(icons[satelliteIndex]);
 
   return satellite;
 }
 
-export function generateCircles() {
+export function generateSatellites() {
   for (let i = 0; i < NUMBER_OF_SATELLITE; i++) {
     const childDiv = createSatellite(i);
     menuContainer.appendChild(childDiv);

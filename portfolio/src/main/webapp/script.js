@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { generateCircles } from './scripts/generateCircles.js';
+import { generateSatellites } from './scripts/generateSatellites.js';
 import { generateContactContent } from './scripts/generateContactContent.js';
 
-generateCircles();
+generateSatellites();
 generateContactContent();
