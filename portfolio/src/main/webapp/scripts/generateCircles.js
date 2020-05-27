@@ -1,90 +1,89 @@
-const GOOGLE_COLORS = ["#f4c20d", "#4885ed", "#3cba54"] // yellow, blue, green
-const ICONS = ["contact", "code", "education", "me", "work", "achievement"];
+const GOOGLE_COLORS = ['#f4c20d', '#4885ed', '#3cba54'] // yellow, blue, green
+const ICONS = ['contact', 'code', 'education', 'me', 'work', 'achievement'];
 
-let contents = [];
+const contents = [];
+
+const menuContainer = document.getElementById('menu-container');
 
 const FULL_CIRCLE_DEGREE = 360;
-const SATELLITE_NUMBER = 6;
-const RADIUS = 250;
-const SATELLITE_RADIUS = 90;
-
-const parentdiv = document.getElementById('parentdiv');
+const SATELLITE_NUMBER = ICONS.length;
+const MENU_RADIUS = 250;
+const SATELLITE_RADIUS = 90; // as specified in CSS (90px)
 
 const showContent = (contentType) => {
-  document.getElementById(contentType).style.display = "block";
+  document.getElementById(contentType).style.display = 'block';
 }
 
 const hideContent = (contentType) => {
-  document.getElementById(contentType).style.display = "none";
+  document.getElementById(contentType).style.display = 'none';
 }
 
-const convertCoordinateToString = (coor) => {
-  const offsetToParentCenter = parseInt(parentdiv.offsetWidth / 2); //assumes parent is square
+const convertNumberToPixelString = (number) => {
+  return number + 'px';
+}
+
+const calculateCoordinate = (mathFunc, satelliteIndex) => {
+  const div = FULL_CIRCLE_DEGREE / SATELLITE_NUMBER;
+  const numb = mathFunc((div * satelliteIndex) * (Math.PI / 180)) * MENU_RADIUS;
+  const offsetToParentCenter = parseInt(menuContainer.offsetWidth / 2);
   const offsetToChildCenter = SATELLITE_RADIUS / 2;
   const totalOffset = offsetToParentCenter - offsetToChildCenter;
-  return (coor + totalOffset).toString() + "px";
-}
 
-const calculateCoordinate = (mathFunc, i) => {
-  const div = FULL_CIRCLE_DEGREE / SATELLITE_NUMBER;
-  const numb = mathFunc((div * i) * (Math.PI / 180)) * RADIUS;
-  return numb;
+  return numb + totalOffset;
 }
 
 const createIcon = (name) => {
   const icon = document.createElement('img');
   icon.src = '../images/icons/' + name + '-icon.png';
-  icon.className = "icon";
+  icon.className = 'icon';
   return icon;
 }
 
-const getCoordinates = (i) => {
+const getCoordinates = (satelliteIndex) => {
   return { 
-    x: calculateCoordinate(Math.cos, i),
-    y: calculateCoordinate(Math.sin, i)
+    x: calculateCoordinate(Math.cos, satelliteIndex),
+    y: calculateCoordinate(Math.sin, satelliteIndex)
   };
 }
 
-function setProps(element, i) {
-  const { x, y } = getCoordinates(i);
-  const color = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
-  element.className = 'div2';
-  element.style.position = 'absolute';
-  element.style.top = convertCoordinateToString(x);
-  element.style.left = convertCoordinateToString(y);
-  element.style.border = "solid 3px " + color;
+function setSatelliteProps(satellite, satelliteIndex) {
+  const { x, y } = getCoordinates(satelliteIndex);
+  const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
+  satellite.className = 'satellite';
+  satellite.style.position = 'absolute';
+  satellite.style.top = convertNumberToPixelString(x);
+  satellite.style.left = convertNumberToPixelString(y);
+  satellite.style.border = 'solid 3px ' + color;
 }
 
-const createChild = (i) => {
+const createChild = (satelliteIndex) => {
   const childDiv = document.createElement('div');
-  setProps(childDiv, i);
+  setSatelliteProps(childDiv, satelliteIndex);
   
-  childDiv.addEventListener("click", function() {
-    if (contents.includes(i)) {
-      hideContent(ICONS[i]);
-      childDiv.style.backgroundColor = "";
-      contents.splice(contents.indexOf(i), 1);
+  childDiv.addEventListener('click', function() {
+    if (contents.includes(satelliteIndex)) {
+      hideContent(ICONS[satelliteIndex]);
+      childDiv.style.backgroundColor = '';
+      contents.splice(contents.indexOf(satelliteIndex), 1);
     } else {
-      showContent(ICONS[i]);
-      const color = GOOGLE_COLORS[i % GOOGLE_COLORS.length];
+      showContent(ICONS[satelliteIndex]);
+      const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
       childDiv.style.backgroundColor = color;
-      contents.push(i);
+      contents.push(satelliteIndex);
     }
   });
 
-  if (ICONS[i] !== undefined) {
-    const icon = createIcon(ICONS[i]);
+  if (ICONS[satelliteIndex] !== undefined) {
+    const icon = createIcon(ICONS[satelliteIndex]);
     childDiv.appendChild(icon);
   }
 
   return childDiv;
 }
 
-function generateCircles() {
+export function generateCircles() {
   for (let i = 0; i < SATELLITE_NUMBER; i++) {
     const childDiv = createChild(i);
-    parentdiv.appendChild(childDiv);
+    menuContainer.appendChild(childDiv);
   }
 }
-
-export default generateCircles;
