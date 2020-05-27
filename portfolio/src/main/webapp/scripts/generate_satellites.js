@@ -14,7 +14,7 @@ import {
   toggleContent
 } from './helpers.js';
 
-import IconGenerator from './models/IconGenerator.js'; 
+import IconGenerator from './models/icon_generator.js'; 
 
 const contents = [];
 const menuContainer = document.getElementById('menu-container');

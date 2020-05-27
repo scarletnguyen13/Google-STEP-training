@@ -20,5 +20,5 @@ function loadScript(url) {
     head.appendChild(script);
 }
 
-loadScript('./scripts/generateSatellites.js');
-loadScript('./scripts/generateContactContent.js');
+loadScript('./scripts/generate_satellites.js');
+loadScript('./scripts/generate_contact_content.js');
