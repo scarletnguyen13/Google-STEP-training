@@ -22,6 +22,7 @@ const menuContainer = document.getElementById('menu-container');
 const iconGenerator = new IconGenerator('50%');
 const icons = iconGenerator.generate(ICONS);
 
+/** @param {number} satelliteIndex */
 const calculateCoordinate = (satelliteIndex) => {
   const angleBetweenTwoSatellites = FULL_CIRCLE_DEGREE / NUMBER_OF_SATELLITE;
   const radians = (angleBetweenTwoSatellites * satelliteIndex) * (Math.PI / 180);
@@ -38,6 +39,10 @@ const calculateCoordinate = (satelliteIndex) => {
   return { x, y };
 }
 
+/**
+ * @param {object} satellite
+ * @param {number} satelliteIndex
+ */
 function setSatelliteProps(satellite, satelliteIndex) {
   const { x, y } = calculateCoordinate(satelliteIndex);
   const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
@@ -55,6 +60,7 @@ function setSatelliteProps(satellite, satelliteIndex) {
   Object.assign(satellite.style, style);
 }
 
+/** @param {number} satelliteIndex */
 const createSatellite = (satelliteIndex) => {
   const satellite = document.createElement('div');
   setSatelliteProps(satellite, satelliteIndex);

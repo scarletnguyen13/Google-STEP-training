@@ -2,6 +2,7 @@ import { CONTACT } from './constants.js';
 
 const contactContainer = document.getElementById('contact');
 
+/** @param {string} url */
 const createAnchor = (url) => {
   const anchor = document.createElement('a');
   anchor.href = url;
@@ -9,13 +10,12 @@ const createAnchor = (url) => {
   return anchor;
 }
 
+/** @param {string} type */
 const createSvgIcon = (type) => {
   const icon = document.createElement('img');
   icon.className = 'svg';
   // cbc icon is slightly darker than other icons, thus no filter needed
-  if (type !== 'cbc') { 
-    icon.id = 'filter';
-  }
+  if (type !== 'cbc') icon.id = 'filter';
   icon.src = `./images/contact-icons/${type}.svg`;
   return icon;
 }

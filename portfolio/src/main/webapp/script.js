@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/** @param {string} url */
 function loadScript(url) {    
     const head = document.getElementsByTagName('head')[0];
     const script = document.createElement('script');

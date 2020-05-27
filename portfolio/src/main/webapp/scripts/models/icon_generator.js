@@ -2,7 +2,7 @@ class IconGenerator {
   constructor(size) {
     this.size = size;
   }
-
+  
   generate(iconNames) {
     const icons = [];
     iconNames.map(name => 
