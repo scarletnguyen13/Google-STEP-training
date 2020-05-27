@@ -12,8 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { generateSatellites } from './scripts/generateSatellites.js';
-import { generateContactContent } from './scripts/generateContactContent.js';
+function loadScript(url) {    
+    const head = document.getElementsByTagName('head')[0];
+    const script = document.createElement('script');
+    script.type = 'module';
+    script.src = url;
+    head.appendChild(script);
+}
 
-generateSatellites();
-generateContactContent();
+loadScript('./scripts/generateSatellites.js');
+loadScript('./scripts/generateContactContent.js');

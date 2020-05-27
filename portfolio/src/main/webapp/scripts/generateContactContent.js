@@ -20,11 +20,9 @@ const createSvgIcon = (type) => {
   return icon;
 }
 
-export function generateContactContent() {
-  for (let type in CONTACT) {
-    const anchor = createAnchor(CONTACT[type]);
-    const icon = createSvgIcon(type);
-    anchor.appendChild(icon);
-    contactContainer.appendChild(anchor);
-  }
+for (let type in CONTACT) {
+  const anchor = createAnchor(CONTACT[type]);
+  const icon = createSvgIcon(type);
+  anchor.appendChild(icon);
+  contactContainer.appendChild(anchor);
 }

@@ -77,9 +77,7 @@ const createSatellite = (satelliteIndex) => {
   return satellite;
 }
 
-export function generateSatellites() {
-  for (let i = 0; i < NUMBER_OF_SATELLITE; i++) {
-    const childDiv = createSatellite(i);
-    menuContainer.appendChild(childDiv);
-  }
+for (let i = 0; i < NUMBER_OF_SATELLITE; i++) {
+  const childDiv = createSatellite(i);
+  menuContainer.appendChild(childDiv);
 }
