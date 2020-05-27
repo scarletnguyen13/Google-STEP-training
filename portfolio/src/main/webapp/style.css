@@ -88,3 +88,9 @@ body {
   border-radius: 5px;
   margin: 10px;  
 }
+
+.ball {
+  position: absolute;
+  border-radius: 100%;
+  opacity: 0.7;
+}

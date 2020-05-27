@@ -47,10 +47,9 @@ const calculateCoordinate = (satelliteIndex) => {
  * @param {number} satelliteIndex
  */
 function setSatelliteProps(satellite, satelliteIndex) {
+  const pixelizedRadius = convertNumberToPixelString(SATELLITE_RADIUS);
   const { x, y } = calculateCoordinate(satelliteIndex);
   const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
-  satellite.className = 'satellite';
-  const pixelizedRadius = convertNumberToPixelString(SATELLITE_RADIUS);
   const style = {
     width: pixelizedRadius,
     height: pixelizedRadius,
@@ -61,6 +60,7 @@ function setSatelliteProps(satellite, satelliteIndex) {
     border: `solid 3px ${color}`,
   }
   Object.assign(satellite.style, style);
+  satellite.className = 'satellite';
 }
 
 /**
@@ -70,7 +70,7 @@ function setSatelliteProps(satellite, satelliteIndex) {
 const createSatellite = (satelliteIndex) => {
   const satellite = document.createElement('div');
   setSatelliteProps(satellite, satelliteIndex);
-  
+
   satellite.addEventListener('click', function() {
     if (contents.includes(satelliteIndex)) {
       toggleContent(ICONS[satelliteIndex], false);
@@ -83,9 +83,8 @@ const createSatellite = (satelliteIndex) => {
       contents.push(satelliteIndex);
     }
   });
-
+  
   satellite.appendChild(icons[satelliteIndex]);
-
   return satellite;
 }
 
