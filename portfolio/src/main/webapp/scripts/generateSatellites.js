@@ -42,10 +42,11 @@ function setSatelliteProps(satellite, satelliteIndex) {
   const { x, y } = calculateCoordinate(satelliteIndex);
   const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
   satellite.className = 'satellite';
+  const pixelizedRadius = convertNumberToPixelString(SATELLITE_RADIUS);
   const style = {
-    width: convertNumberToPixelString(SATELLITE_RADIUS),
-    height: convertNumberToPixelString(SATELLITE_RADIUS),
-    borderRadius: convertNumberToPixelString(SATELLITE_RADIUS),
+    width: pixelizedRadius,
+    height: pixelizedRadius,
+    borderRadius: pixelizedRadius,
     position: 'absolute',
     top: convertNumberToPixelString(x),
     left: convertNumberToPixelString(y),
@@ -59,13 +60,12 @@ const createSatellite = (satelliteIndex) => {
   setSatelliteProps(satellite, satelliteIndex);
   
   satellite.addEventListener('click', function() {
-    const isContentVisible = contents.includes(satelliteIndex);
-    if (isContentVisible) {
-      toggleContent(ICONS[satelliteIndex], !isContentVisible);
+    if (contents.includes(satelliteIndex)) {
+      toggleContent(ICONS[satelliteIndex], false);
       satellite.style.backgroundColor = '';
       contents.splice(contents.indexOf(satelliteIndex), 1);
     } else {
-      toggleContent(ICONS[satelliteIndex], isContentVisible);
+      toggleContent(ICONS[satelliteIndex], true);
       const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
       satellite.style.backgroundColor = color;
       contents.push(satelliteIndex);
