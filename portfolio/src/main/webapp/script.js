@@ -13,5 +13,7 @@
 // limitations under the License.
 
 import { generateCircles } from './scripts/generateCircles.js';
+import { generateContactContent } from './scripts/generateContactContent.js';
 
 generateCircles();
+generateContactContent();
