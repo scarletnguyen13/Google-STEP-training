@@ -20,4 +20,4 @@ class IconGenerator {
   }
 }
 
-export default IconGenerator;
+export { IconGenerator };
