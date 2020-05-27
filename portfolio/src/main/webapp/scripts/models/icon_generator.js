@@ -3,6 +3,10 @@ class IconGenerator {
     this.size = size;
   }
   
+  /**
+   * @param {Array.string} iconNames
+   * @returns {Array.Element} 
+   */
   generate(iconNames) {
     const icons = [];
     iconNames.map(name => 
@@ -11,6 +15,10 @@ class IconGenerator {
     return icons;
   }
 
+  /**
+   * @param {string} name
+   * @returns {Element} 
+   */
   createIcon(name) {
     const icon = document.createElement('img');
     icon.src = `../images/icons/${name}-icon.png`;

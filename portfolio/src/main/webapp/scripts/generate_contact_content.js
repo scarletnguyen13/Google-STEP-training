@@ -2,7 +2,10 @@ import { CONTACT } from './constants.js';
 
 const contactContainer = document.getElementById('contact');
 
-/** @param {string} url */
+/** 
+ * @param {string} url
+ * @returns {Element} 
+ */
 const createAnchor = (url) => {
   const anchor = document.createElement('a');
   anchor.href = url;
@@ -10,7 +13,10 @@ const createAnchor = (url) => {
   return anchor;
 }
 
-/** @param {string} type */
+/** 
+ * @param {string} type
+ * @returns {Element} 
+ */
 const createSvgIcon = (type) => {
   const icon = document.createElement('img');
   icon.className = 'svg';
