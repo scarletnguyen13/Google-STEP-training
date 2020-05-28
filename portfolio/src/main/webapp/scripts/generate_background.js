@@ -5,7 +5,6 @@ const balls = [];
 const generateRandomStyle = () => {
   const randomColorIndex = Math.floor(Math.random() * BACKGROUND_RANDOM_COLORS.length);
   const randomSize = `${Math.random()}em`;
-
   return {
     background: BACKGROUND_RANDOM_COLORS[randomColorIndex],
     left: `${Math.floor(Math.random() * 100)}vw`,
@@ -26,16 +25,16 @@ for (let i = 0; i < NUMBER_OF_BACKGROUND_BALLS; i++) {
 }
 
 // Keyframes
-balls.forEach((el, i, ra) => {
-  const nextCoordinate = {
+balls.forEach((ele, i) => {
+  const nextCoordinates = {
     x: Math.random() * (i % 2 === 0 ? -11 : 11),
     y: Math.random() * 12
   };
 
-  el.animate(
+  ele.animate(
     [
       { transform: "translate(0, 0)" },
-      { transform: `translate(${nextCoordinate.x}rem, ${nextCoordinate.y}rem)` }
+      { transform: `translate(${nextCoordinates.x}rem, ${nextCoordinates.y}rem)` }
     ],
     {
       duration: (Math.random() + 1) * 2000, // random duration
