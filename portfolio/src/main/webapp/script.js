@@ -23,6 +23,6 @@ function loadScript(url) {
 
 loadScript('./scripts/generate_background.js');
 loadScript('./scripts/generate_satellites.js');
-loadScript('./scripts/generate_my_info_content.js');
+loadScript('./scripts/generate_content.js');
 loadScript('./scripts/generate_contact_content.js');
 
