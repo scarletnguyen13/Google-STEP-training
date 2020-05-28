@@ -85,15 +85,16 @@ body {
   border: 3px solid #3cba54;
 }
 
-#filter {
-  filter: invert(75%) sepia(0%) saturate(11%) hue-rotate(137deg) brightness(90%) contrast(90%);
-}
-
 .svg {
   width: 40px;
   height: 40px;
   border-radius: 5px;
   margin: 10px;  
+  filter: invert(75%) sepia(0%) saturate(11%) hue-rotate(137deg) brightness(90%) contrast(90%);
+}
+
+.svg:hover {
+  filter: invert(84%) sepia(14%) saturate(4227%) hue-rotate(357deg) brightness(100%) contrast(92%);
 }
 
 .ball {

@@ -16,8 +16,6 @@ const CONTACT = {
            'scarlet.nguyen01@gmail.com',
   'facebook': 'https://www.facebook.com/scarletnguyen13',
   'instagram': 'https://www.instagram.com/scarletnguyen13_/',
-  'cbc': 'https://www.cbc.ca/news/canada/british-columbia/' +
-         'teen-hackathon-winner-app-female-students-tech-industry-1.4902520'
 };
 
 const PERSONAL_INFO = {
