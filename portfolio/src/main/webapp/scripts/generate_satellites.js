@@ -1,8 +1,7 @@
 import { 
   GOOGLE_COLORS, 
   ICONS, 
-  FULL_CIRCLE_DEGREE, 
-  NUMBER_OF_SATELLITE, 
+  FULL_CIRCLE_DEGREE,
   MENU_RADIUS, 
   SATELLITE_RADIUS 
 } from './constants.js';
@@ -11,7 +10,7 @@ import {
   getCircleX,
   getCircleY,
   convertNumberToPixelString,
-  toggleContent
+  setContentVisibility
 } from './helpers.js';
 
 import { IconGenerator } from './models/icon_generator.js'; 
@@ -26,8 +25,8 @@ const icons = iconGenerator.generate(ICONS);
  * @param {number} satelliteIndex
  * @returns {object} 
  */
-const calculateCoordinate = (satelliteIndex) => {
-  const angleBetweenTwoSatellites = FULL_CIRCLE_DEGREE / NUMBER_OF_SATELLITE;
+const calculateCoordinates = (satelliteIndex) => {
+  const angleBetweenTwoSatellites = FULL_CIRCLE_DEGREE / ICONS.length;
   const radians = (angleBetweenTwoSatellites * satelliteIndex) * (Math.PI / 180);
   const menuXCoordinate = getCircleX(radians, MENU_RADIUS);
   const menuYCoordinate = getCircleY(radians, MENU_RADIUS);
@@ -48,7 +47,7 @@ const calculateCoordinate = (satelliteIndex) => {
  */
 function setSatelliteProps(satellite, satelliteIndex) {
   const pixelizedRadius = convertNumberToPixelString(SATELLITE_RADIUS);
-  const { x, y } = calculateCoordinate(satelliteIndex);
+  const { x, y } = calculateCoordinates(satelliteIndex);
   const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
   const style = {
     width: pixelizedRadius,
@@ -71,24 +70,27 @@ const createSatellite = (satelliteIndex) => {
   const satellite = document.createElement('div');
   setSatelliteProps(satellite, satelliteIndex);
 
-  satellite.addEventListener('click', function() {
-    if (contents.includes(satelliteIndex)) {
-      toggleContent(ICONS[satelliteIndex], false);
-      satellite.style.backgroundColor = '';
-      contents.splice(contents.indexOf(satelliteIndex), 1);
-    } else {
-      toggleContent(ICONS[satelliteIndex], true);
-      const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
-      satellite.style.backgroundColor = color;
-      contents.push(satelliteIndex);
-    }
-  });
+  satellite.addEventListener('click', () => toggleContent(satellite, satelliteIndex));
   
   satellite.appendChild(icons[satelliteIndex]);
   return satellite;
 }
 
-for (let i = 0; i < NUMBER_OF_SATELLITE; i++) {
+function toggleContent(satellite, satelliteIndex) {
+  // if the icon is selected and content is showing
+  if (contents.includes(satelliteIndex)) { 
+    setContentVisibility(ICONS[satelliteIndex], false); // hide the content
+    satellite.style.backgroundColor = ''; // change the icon's background color to none
+    contents.splice(contents.indexOf(satelliteIndex), 1); // remove the content from content list
+  } else { 
+    setContentVisibility(ICONS[satelliteIndex], true); // show the content
+    const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
+    satellite.style.backgroundColor = color; // change the icon's background color to color
+    contents.push(satelliteIndex); // add the content to content list
+  }
+}
+
+for (let i = 0; i < ICONS.length; i++) {
   const childDiv = createSatellite(i);
   menuContainer.appendChild(childDiv);
 }

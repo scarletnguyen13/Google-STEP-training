@@ -1,6 +1,7 @@
 class IconGenerator {
-  constructor(size) {
-    this.size = size;
+  /** @param {string} iconWidth */
+  constructor(iconWidth) {
+    this.iconWidth = iconWidth;
   }
   
   /**
@@ -23,7 +24,7 @@ class IconGenerator {
     const icon = document.createElement('img');
     icon.src = `../images/icons/${name}-icon.png`;
     icon.className = 'icon';
-    icon.style.width = this.size;
+    icon.style.width = this.iconWidth;
     return icon;
   }
 }

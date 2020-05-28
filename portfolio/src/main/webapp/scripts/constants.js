@@ -5,7 +5,6 @@ const ICONS = ['contact', 'code', 'education', 'me', 'work', 'achievement'];
 const NUMBER_OF_BACKGROUND_BALLS = 50;
 
 const FULL_CIRCLE_DEGREE = 360;
-const NUMBER_OF_SATELLITE = ICONS.length;
 const MENU_RADIUS = 250;
 const SATELLITE_RADIUS = 90; // as specified in CSS (90px);
 
@@ -27,7 +26,6 @@ export {
   ICONS,
   NUMBER_OF_BACKGROUND_BALLS,
   FULL_CIRCLE_DEGREE, 
-  NUMBER_OF_SATELLITE, 
   MENU_RADIUS, 
   SATELLITE_RADIUS,
   CONTACT,

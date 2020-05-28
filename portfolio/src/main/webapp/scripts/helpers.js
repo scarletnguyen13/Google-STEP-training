@@ -20,17 +20,17 @@ const convertNumberToPixelString = (number) => {
 }
 
 /**
- * @param {string} contentType
+ * @param {string} elementId
  * @param {boolean} isVisible
  */
-const toggleContent = (contentType, isVisible) => {
+const setContentVisibility = (elementId, isVisible) => {
   const displayType = isVisible ? 'block' : 'none';
-  document.getElementById(contentType).style.display = displayType;
+  document.getElementById(elementId).style.display = displayType;
 }
 
 export { 
   getCircleX,
   getCircleY,
   convertNumberToPixelString,
-  toggleContent
+  setContentVisibility
 }
