@@ -1,7 +1,12 @@
 import { BACKGROUND_RANDOM_COLORS, NUMBER_OF_BACKGROUND_BALLS } from './constants.js';
+import { Coordinates } from './models/coordinates.js'; 
 
 const balls = [];
 
+/**
+ * @param {number} satelliteIndex
+ * @returns {object} 
+ */
 const generateRandomStyle = () => {
   const randomColorIndex = Math.floor(Math.random() * BACKGROUND_RANDOM_COLORS.length);
   const randomSize = `${Math.random()}em`;
@@ -24,20 +29,17 @@ for (let i = 0; i < NUMBER_OF_BACKGROUND_BALLS; i++) {
   document.getElementById('content').append(ball);
 }
 
-const generateRandomCoordinates = (i) => {
-  const x = Math.random() * (i % 2 === 0 ? -11 : 11);
-  const y = Math.random() * 12;
-  return { x, y };
-}
-
 // Keyframes
 balls.forEach((ele, i) => {
-  const nextCoordinates = generateRandomCoordinates(i);
+  const nextCoordinates = new Coordinates();
+  nextCoordinates.calculateRandomCoordinates(i);
 
   ele.animate(
     [
       { transform: "translate(0, 0)" },
-      { transform: `translate(${nextCoordinates.x}rem, ${nextCoordinates.y}rem)` }
+      { transform: 
+          `translate(${nextCoordinates.getX()}rem, ${nextCoordinates.getY()}rem)` 
+      }
     ],
     {
       duration: (Math.random() + 1) * 2000, // random duration
