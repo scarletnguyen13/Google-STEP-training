@@ -1,7 +1,8 @@
 import { 
   GOOGLE_COLORS, 
   ICONS,
-  SATELLITE_RADIUS 
+  SATELLITE_RADIUS,
+  MENU_RADIUS
 } from './constants.js';
 
 import {
@@ -18,14 +19,11 @@ const menuContainer = document.getElementById('menu-container');
 const iconGenerator = new IconGenerator('50%');
 const icons = iconGenerator.generate(ICONS);
 
-/**
- * @param {number} satelliteIndex
- * @returns {Coordinates} 
- */
-const calculateCoordinates = (satelliteIndex) => {
-  const coordinates = new Coordinates();
-  coordinates.calculateCoordinatesAroundCircle(menuContainer.offsetWidth , satelliteIndex);
-  return coordinates;
+const satelliteInfo = {
+  parentOffsetWidth: menuContainer.offsetWidth,
+  childOffsetWidth: SATELLITE_RADIUS,
+  totalChildren: ICONS.length,
+  containerRadius: MENU_RADIUS
 }
 
 /**
@@ -33,9 +31,12 @@ const calculateCoordinates = (satelliteIndex) => {
  * @param {number} satelliteIndex
  */
 function setSatelliteProps(satellite, satelliteIndex) {
+  const coordinates = new Coordinates();
+  coordinates.calculateCoordinatesAroundCircle(satelliteIndex, satelliteInfo);
+
   const pixelizedRadius = convertNumberToPixelString(SATELLITE_RADIUS);
-  const coordinates = calculateCoordinates(satelliteIndex);
   const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
+
   const style = {
     width: pixelizedRadius,
     height: pixelizedRadius,
@@ -45,6 +46,7 @@ function setSatelliteProps(satellite, satelliteIndex) {
     left: convertNumberToPixelString(coordinates.getY()),
     border: `solid 3px ${color}`,
   }
+  
   Object.assign(satellite.style, style);
   satellite.className = 'satellite';
 }
