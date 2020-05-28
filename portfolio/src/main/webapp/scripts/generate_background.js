@@ -24,12 +24,15 @@ for (let i = 0; i < NUMBER_OF_BACKGROUND_BALLS; i++) {
   document.getElementById('content').append(ball);
 }
 
+const generateRandomCoordinates = (i) => {
+  const x = Math.random() * (i % 2 === 0 ? -11 : 11);
+  const y = Math.random() * 12;
+  return { x, y };
+}
+
 // Keyframes
 balls.forEach((ele, i) => {
-  const nextCoordinates = {
-    x: Math.random() * (i % 2 === 0 ? -11 : 11),
-    y: Math.random() * 12
-  };
+  const nextCoordinates = generateRandomCoordinates(i);
 
   ele.animate(
     [
