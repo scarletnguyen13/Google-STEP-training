@@ -1,34 +1,34 @@
+import { PERSONAL_INFO } from './constants.js';
+
 const myInfoContainer = document.getElementById('me');
 
-const TAGS = {
-  "Classification": [
-    "Vietnamese Canadian", "Ambivert", "Coder by day, Writer by night"
-  ],
-  "3 Words describe me": ["Randomly Weird", "Ambitious", "Hard-working"],
-  "Easily fall in love with": [
-    "Dessert", "Puppies", "Nature", "(occasionally) People with glasses"
-  ],
-  "Dislike": ["People who complain a lot but don't act"]
+const createTag = (content) => {
+  const tag = document.createElement('div');
+  tag.classList.add('center', 'description');
+  tag.innerHTML = content;
+  return tag;
 }
 
-for (let title in TAGS) {
-  const infoContainer = document.createElement('div');
-  infoContainer.className = "horizontal-container";
+const createLabel = (content) => {
   const label = document.createElement('label');
   label.className = "label"
-  label.innerHTML = `${title}: `;
-  
-  const contents = document.createElement('div');
-  contents.className = "horizontal-container";
-  TAGS[title].map(content => {
-    const description = document.createElement('div');
-    description.classList.add('center', 'description');
-    description.innerHTML = content;
-    contents.appendChild(description);
+  label.innerHTML = `${content}: `;
+  return label;
+}
+
+for (let title in PERSONAL_INFO) {
+  const infoContainer = document.createElement('div');
+  infoContainer.className = "horizontal-container";
+
+  const label = createLabel(title);
+  const tags = document.createElement('div');
+  tags.className = "horizontal-container";
+  PERSONAL_INFO[title].map(content => {
+    const tag = createTag(content);
+    tags.appendChild(tag);
   });
 
   infoContainer.appendChild(label);
-  infoContainer.appendChild(contents);
-
+  infoContainer.appendChild(tags);
   myInfoContainer.append(infoContainer);
 }

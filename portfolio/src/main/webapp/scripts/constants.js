@@ -18,7 +18,19 @@ const CONTACT = {
   'instagram': 'https://www.instagram.com/scarletnguyen13_/',
   'cbc': 'https://www.cbc.ca/news/canada/british-columbia/' +
          'teen-hackathon-winner-app-female-students-tech-industry-1.4902520'
-}
+};
+
+const PERSONAL_INFO = {
+  "Basic": ["scarlet nguyen", "19-year-old", "aries"],
+  "3 words describe me": ["randomly weird", "ambitious", "hard-working"],
+  "Classification": [
+    "vietnamese canadian", "social introvert", "coder by day, writer by night"
+  ],
+  "Easily fall in love with": [
+    "sweet stuff", "puppies", "nature", "(occasionally) people with glasses"
+  ],
+  "Dislike": ["people who complain a lot but don't act"]
+};
 
 export { 
   GOOGLE_COLORS,
@@ -29,4 +41,5 @@ export {
   MENU_RADIUS, 
   SATELLITE_RADIUS,
   CONTACT,
+  PERSONAL_INFO,
 }
