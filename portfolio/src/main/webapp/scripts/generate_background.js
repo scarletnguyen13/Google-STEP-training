@@ -4,7 +4,6 @@ import { Coordinates } from './models/coordinates.js';
 const balls = [];
 
 /**
- * @param {number} satelliteIndex
  * @returns {object} 
  */
 const generateRandomStyle = () => {
@@ -26,15 +25,15 @@ for (let i = 0; i < NUMBER_OF_BACKGROUND_BALLS; i++) {
   Object.assign(ball.style, generateRandomStyle())
   
   balls.push(ball);
-  document.getElementById('content').append(ball);
+  document.body.append(ball);
 }
 
 // Keyframes
-balls.forEach((ele, i) => {
+balls.forEach((element, i) => {
   const nextCoordinates = new Coordinates();
   nextCoordinates.calculateRandomCoordinates(i);
 
-  ele.animate(
+  element.animate(
     [
       { transform: "translate(0, 0)" },
       { transform: 
