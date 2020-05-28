@@ -4,15 +4,31 @@
     <meta charset="UTF-8">
     <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
   </head>
   <body>
-    <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
+    <div class="center" id="content">
+      <div class="center" id="menu-container">
+        <img src="images/logo.png" id="logo"/>
+      </div>
+      
+      <div class="info-container" id="me">
+        <h3>Name: Scarlet Nguyen</h3>
+      </div>
+      <div class="info-container" id="work">
+        <h3>Company: Google</h3>
+      </div>
+      <div class="info-container" id="education">
+        <h3>School: UBC</h3>
+      </div>
+      <div class="info-container" id="achievement">
+        <h3>Achievement: 19 hackathons</h3>
+      </div>
+      <div class="info-container" id="code">
+        <h3>Projects: 30+ projects</h3>
+      </div>
+      <div class="info-container" id="contact" />
     </div>
+
+    <script type="module" src="script.js"></script>
   </body>
 </html>
