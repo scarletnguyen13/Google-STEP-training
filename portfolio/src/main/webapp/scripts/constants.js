@@ -1,6 +1,9 @@
 const GOOGLE_COLORS = ['#f4c20d', '#4885ed', '#3cba54'] // yellow, blue, green
+const TAG_COLORS = ['#e6c445', '#7ba9f9', '#62cc78'];
 const BACKGROUND_RANDOM_COLORS = ["#3CC157", "#2AA7FF", "#1B1B1B", "#FCBC0F", "#F85F36"];
+
 const ICONS = ['contact', 'code', 'education', 'me', 'work', 'achievement'];
+const HEADERS = ['Projects', 'Education', 'About', 'Experience', 'Achievement'];
 
 const NUMBER_OF_BACKGROUND_BALLS = 50;
 
@@ -8,8 +11,6 @@ const FULL_CIRCLE_DEGREE = 360;
 const MENU_RADIUS = 250;
 const SATELLITE_RADIUS = 90; // as specified in CSS (90px);
 
-const TAG_COLORS = ['#ffe279', '#b5d0ff', '#62cc78'];
-const HEADERS = ['Projects', 'Education', 'About', 'Experience', 'Achievement'];
 
 const CONTACT = {
   'github': 'https://github.com/scarletnguyen13',
@@ -56,7 +57,7 @@ const EXPERIENCE =  {
   "Hootsuite": ["Software Developer intern", "8 months", "first accepted female"],
   "Skip": ["scala", "play framework", "i18n", "graphqQL", "backend", "agile"],
   "Women in Tech World Organization": ["HR & Marketing intern", "13 months"],
-  "Skip": ["interview & onboarding guide", "content marketing", "UX & UI design"]
+  "Skip1": ["interview & onboarding guide", "content marketing", "UX & UI design"]
 }
 
 const ACHIEVEMENT = {
