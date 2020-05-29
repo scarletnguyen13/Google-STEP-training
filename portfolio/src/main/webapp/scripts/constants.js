@@ -40,7 +40,7 @@ const PERSONAL_INFO = {
   "Easily fall in love with": [
     "sweet stuff", "puppies", "nature", "(occasionally) people with glasses"
   ],
-  "Dislike": ["people who complain a lot but don't act"]
+  "Dislike": ["anyone who always complains but doesn't take acttion"]
 };
 
 const EDUCATION =  {

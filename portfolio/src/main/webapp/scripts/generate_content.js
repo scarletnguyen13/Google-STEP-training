@@ -19,7 +19,7 @@ const createLabel = (content, color) => {
 }
 
 const getColor = (list, i) => {
-  return list[(i % list.length + 1) % list.length];
+  return list[(i + 1) % list.length];
 }
 
 containerIds.map((id, index) => {
