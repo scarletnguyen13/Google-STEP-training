@@ -70,11 +70,13 @@ function toggleContent(satellite, satelliteIndex) {
   if (contents.includes(satelliteIndex)) { 
     setContentVisibility(ICONS[satelliteIndex], false); // hide the content
     satellite.style.backgroundColor = ''; // change the icon's background color to none
+    satellite.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.938)';
     contents.splice(contents.indexOf(satelliteIndex), 1); // remove the content from content list
   } else { 
     setContentVisibility(ICONS[satelliteIndex], true); // show the content
     const color = GOOGLE_COLORS[satelliteIndex % GOOGLE_COLORS.length];
     satellite.style.backgroundColor = color; // change the icon's background color to color
+    satellite.style.boxShadow = 'none';
     contents.push(satelliteIndex); // add the content to content list
   }
 }
