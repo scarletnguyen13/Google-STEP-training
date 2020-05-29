@@ -9,7 +9,7 @@ const NUMBER_OF_BACKGROUND_BALLS = 50;
 
 const FULL_CIRCLE_DEGREE = 360;
 const MENU_RADIUS = 250;
-const SATELLITE_RADIUS = 90; // as specified in CSS (90px);
+const SATELLITE_RADIUS = 90;
 
 
 const CONTACT = {
@@ -33,8 +33,7 @@ const CODE =  {
 };
 
 const PERSONAL_INFO = {
-  "Basic": ["scarlet nguyen", "19-year-old", "aries"],
-  "3 words describe me": ["randomly weird", "ambitious", "hard-working"],
+  "Basic": ["scarlet nguyen", "19 y/o", "randomly weird", "ambitious", "hard-working"],
   "Classification": [
     "vietnamese canadian", "social introvert", "coder by day, writer by night"
   ],
