@@ -40,7 +40,7 @@ const PERSONAL_INFO = {
   "Easily fall in love with": [
     "sweet stuff", "puppies", "nature", "(occasionally) people with glasses"
   ],
-  "Dislike": ["anyone who always complains but doesn't take acttion"]
+  "Dislike": ["anyone who always complains but doesn't take action"]
 };
 
 const EDUCATION =  {
@@ -54,7 +54,7 @@ const EDUCATION =  {
 const EXPERIENCE =  {
   "Google": ["STEP Software Developer intern", "3 months"],
   "Hootsuite": ["Software Developer intern", "8 months", "first accepted female"],
-  "": ["scala", "play framework", "i18n", "graphqQL", "backend", "agile"],
+  "Skip": ["scala", "play framework", "i18n", "graphqQL", "backend", "agile"],
   "Women in Tech World Organization": ["HR & Marketing intern", "13 months"],
   "Skip": ["interview & onboarding guide", "content marketing", "UX & UI design"]
 }

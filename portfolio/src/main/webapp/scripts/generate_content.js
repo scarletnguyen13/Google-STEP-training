@@ -2,10 +2,10 @@ import { ICONS, CONTENTS, GOOGLE_COLORS, TAG_COLORS, HEADERS } from './constants
 
 const containerIds = ICONS.slice(1); // removes Contact
 
-const createTag = (content, color) => {
+const createTag = (content, backgroundColor) => {
   const tag = document.createElement('div');
   tag.classList.add('center', 'tag');
-  tag.style.backgroundColor = color;
+  tag.style.backgroundColor = backgroundColor;
   tag.innerHTML = content;
   return tag;
 }
