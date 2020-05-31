@@ -13,19 +13,14 @@ hamburgerMenu.addEventListener('click', () => {
 //   document.getElementById('logo-text').innerText = data;
 // });
 
-const COMMENTS = [
+const FAKE_COMMENTS = [
   {
     createdAt: 'Fri',
     body: 'My first comment!'
   }
 ]
 
-const commentList = document.getElementById('comment-list');
-
-COMMENTS.map((comment, index) => {
-  const commentContainer = document.createElement('li');
-  commentContainer.className = 'comment';
-
+const createCommentHeader = (index, createdAt) => {
   const commentHeader = document.createElement('div');
   commentHeader.className = 'comment-header';
 
@@ -44,6 +39,16 @@ COMMENTS.map((comment, index) => {
   commentHeader.appendChild(orderNo);
   commentHeader.appendChild(createdAt);
 
+  return commentHeader;
+}
+
+const commentList = document.getElementById('comment-list');
+
+COMMENTS.map((comment, index) => {
+  const commentContainer = document.createElement('li');
+  commentContainer.className = 'comment';
+
+  const commentHeader = createCommentHeader(index, comment.createdAt);
   const commentBody = document.createElement('p');
   commentBody.innerHTML = `> ${comment.body}`;
 
