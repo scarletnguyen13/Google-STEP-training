@@ -25,4 +25,4 @@ loadScript('./scripts/generate_background.js');
 loadScript('./scripts/generate_satellites.js');
 loadScript('./scripts/generate_content.js');
 loadScript('./scripts/generate_contact_content.js');
-
+loadScript('./scripts/generate_comments.js');

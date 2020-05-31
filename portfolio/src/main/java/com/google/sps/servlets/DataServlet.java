@@ -27,6 +27,15 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello Scarlet!</h1>");
+    response.getWriter().append("Hello Scarlet");
   }
+
+    /**
+   * Converts a ServerStats instance into a JSON string using the Gson library.
+   */
+  // private String convertToJson(ServerStats serverStats) {
+  //   Gson gson = new Gson();
+  //   String json = gson.toJson(serverStats);
+  //   return json;
+  // }
 }
