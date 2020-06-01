@@ -12,29 +12,40 @@ let comments = [
 const hamburgerMenu = document.getElementById('hamburger-menu');
 const commentList = document.getElementById('comment-list');
 
-hamburgerMenu.addEventListener('click', async () => {
-  hamburgerMenu.classList.toggle("change");
-  hamburgerMenu.classList.toggle("visible");
-  document.getElementById('comments-container').classList.toggle('visible');
-
+const getComments = async () => {
   if (hamburgerMenu.classList.contains('visible')) {
     const response = await fetch('/comment');
     const updatedComments = await response.json();
     comments = updatedComments;
   }
+}
+
+/**
+ * @param {FormData} formData
+ */
+const postComment = async (formData) => {
+  const response = await fetch('/comment', {
+    method: 'POST',
+    body: formData,
+  });
+  const status = await response.status();
+  if (status === 200) {
+    getComments();
+  }
+}
+
+hamburgerMenu.addEventListener('click', () => {
+  hamburgerMenu.classList.toggle("change");
+  hamburgerMenu.classList.toggle("visible");
+  document.getElementById('comments-container').classList.toggle('visible');
+  getComments();
 });
 
 document.getElementById('comment-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const form = e.currentTarget;
   const data = new FormData(form);
-
-  const response = await fetch('/comment', {
-    method: 'POST',
-    body: data,
-  });
-  const updatedComments = await response.json();
-  comments = updatedComments;
+  postComment(data);
 });
 
 /** @returns {Element} */
