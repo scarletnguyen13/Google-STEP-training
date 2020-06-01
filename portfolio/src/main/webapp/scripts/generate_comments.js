@@ -12,40 +12,31 @@ let comments = [
 const hamburgerMenu = document.getElementById('hamburger-menu');
 const commentList = document.getElementById('comment-list');
 
-const getComments = async () => {
-  if (hamburgerMenu.classList.contains('visible')) {
-    const response = await fetch('/comment');
-    const updatedComments = await response.json();
-    comments = updatedComments;
-  }
-}
-
 /**
+ * @param {string} action
  * @param {FormData} formData
  */
-const postComment = async (formData) => {
+const fetchComments = async (action, formData) => {
   const response = await fetch('/comment', {
-    method: 'POST',
+    method: action,
     body: formData,
   });
-  const status = await response.status();
-  if (status === 200) {
-    getComments();
-  }
+  const updatedComments = await response.json();
+  comments = updatedComments;
 }
 
 hamburgerMenu.addEventListener('click', () => {
   hamburgerMenu.classList.toggle("change");
   hamburgerMenu.classList.toggle("visible");
   document.getElementById('comments-container').classList.toggle('visible');
-  getComments();
+  fetchComments('GET', null);
 });
 
 document.getElementById('comment-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const form = e.currentTarget;
   const data = new FormData(form);
-  postComment(data);
+  fetchComments('POST', data);
 });
 
 /** @returns {Element} */
