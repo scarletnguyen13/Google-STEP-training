@@ -29,11 +29,11 @@ const createCommentHeader = (index, createdAt) => {
   profileImage.src = '../images/profile-placeholder.png';
   profileImage.alt = "Profile Placeholder";
 
-  const orderNo = document.createElement('p');
-  orderNo.innerHTML = `Comment #${index + 1}`;
+  const orderText = document.createElement('p');
+  orderText.innerHTML = `Comment #${index + 1}`;
 
-  const createdAt = document.createElement('p');
-  createdAt.innerHTML = comment.createdAt;
+  const createdAtText = document.createElement('p');
+  createdAtText.innerHTML = comment.createdAt;
 
   commentHeader.appendChild(profileImage);
   commentHeader.appendChild(orderNo);
