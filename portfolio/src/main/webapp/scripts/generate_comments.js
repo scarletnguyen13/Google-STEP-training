@@ -1,26 +1,46 @@
+let comments = [
+  // Mock Data
+  {
+    "content": "I went here to write some random thoughts",
+    "timestamp": 1591035530066,
+    "username": "Rough Bush"
+  }
+];
 
 const hamburgerMenu = document.getElementById('hamburger-menu');
 
-hamburgerMenu.addEventListener('click', () => {
+hamburgerMenu.addEventListener('click', async () => {
   hamburgerMenu.classList.toggle("change");
   hamburgerMenu.classList.toggle("visible");
   document.getElementById('comments-container').classList.toggle('visible');
+
+  if (hamburgerMenu.classList.contains('visible')) {
+    console.log("when click burger");
+    const response = await fetch('/comment');
+    const updatedComments = await response.json();
+    comments = updatedComments;
+  }
 });
 
-// document.getElementById('logo-text').addEventListener('click', async function() {
-//   const response = await fetch('/data');
-//   const data = await response.text();
-//   document.getElementById('logo-text').innerText = data;
-// });
+document.getElementById('comment-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.currentTarget;
+  const data = new FormData(form);
 
-const FAKE_COMMENTS = [
-  {
-    createdAt: 'Fri',
-    body: 'My first comment!'
-  }
-]
+  const response = await fetch('/comment', {
+    method: 'POST',
+    body: data,
+  });
+  const updatedComments = await response.json();
+  comments = updatedComments;
+});
 
-const createCommentHeader = (index, createdAt) => {
+const convertMillisecondsToLocaleString = (milliseconds) => {
+  const date = new Date(milliseconds);
+  return date.toLocaleDateString();
+}
+
+const createCommentHeader = (comment) => {
   const commentHeader = document.createElement('div');
   commentHeader.className = 'comment-header';
 
@@ -29,28 +49,29 @@ const createCommentHeader = (index, createdAt) => {
   profileImage.src = '../images/profile-placeholder.png';
   profileImage.alt = "Profile Placeholder";
 
-  const orderText = document.createElement('p');
-  orderText.innerHTML = `Comment #${index + 1}`;
+  const usernameText = document.createElement('b');
+  usernameText.innerHTML = comment.username;
 
   const createdAtText = document.createElement('p');
-  createdAtText.innerHTML = comment.createdAt;
+  createdAtText.innerHTML = 
+    convertMillisecondsToLocaleString(comment.timestamp);
 
   commentHeader.appendChild(profileImage);
-  commentHeader.appendChild(orderNo);
-  commentHeader.appendChild(createdAt);
+  commentHeader.appendChild(usernameText);
+  commentHeader.appendChild(createdAtText);
 
   return commentHeader;
 }
 
 const commentList = document.getElementById('comment-list');
 
-COMMENTS.map((comment, index) => {
+comments.map((comment) => {
   const commentContainer = document.createElement('li');
   commentContainer.className = 'comment';
 
-  const commentHeader = createCommentHeader(index, comment.createdAt);
+  const commentHeader = createCommentHeader(comment);
   const commentBody = document.createElement('p');
-  commentBody.innerHTML = `> ${comment.body}`;
+  commentBody.innerHTML = `> ${comment.content}`;
 
   commentContainer.appendChild(commentHeader);
   commentContainer.appendChild(commentBody);
