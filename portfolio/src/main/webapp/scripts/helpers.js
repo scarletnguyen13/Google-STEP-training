@@ -39,7 +39,7 @@ const setContentVisibility = (elementId, isVisible) => {
  */
 const convertMillisecondsToLocaleString = (milliseconds) => {
   const date = new Date(milliseconds);
-  return date.toLocaleDateString();
+  return date.toLocaleString();
 }
 
 export { 

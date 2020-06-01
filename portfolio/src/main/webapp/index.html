@@ -5,6 +5,7 @@
     <title>Scarlet Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/x-icon" href="./images/logo.ico" />
+    <script type="module" src="script.js"></script>
   </head>
   <body>
     <div class="center" id="content">
@@ -28,21 +29,18 @@
         <div class="bar3"></div>
       </div>
       <div id="comments-container">
-      <h1 id="comment-header-text">Comments</h1>  
-      <ul id="comment-list">
-        <form id="comment-form">
-          <textarea
-            name="comment"
-            placeholder="Type something..."
-            class="comment-textarea" 
-            rows="3"></textarea>
-          <input class="send-button" type="submit" value="Send" />
-        </form>
-      </ul>
+      <h1 id="comment-header-text">Comments</h1>
+      <ul id="comment-list"></ul>
+      <form id="comment-form">
+        <textarea
+          id="comment-textarea"
+          name="comment"
+          placeholder="Type something..."
+          rows="3"
+          required></textarea>
+        <input class="send-button" type="submit" value="Send"/>
+      </form>
     </div> 
     </div>
-    <script type="module" src="script.js">
-
-    </script>
   </body>
 </html>

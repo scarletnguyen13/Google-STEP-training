@@ -28,10 +28,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/comment")
-public class DataServlet extends HttpServlet {
+public class CommentServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -53,7 +53,8 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String commentString = request.getParameter("comment");
+    String requestData = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+    String commentString = requestData.replaceAll("(\r\n|\n)", "<br />");
     Entity commentEntity = Comment.createCommentEntity(commentString);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);

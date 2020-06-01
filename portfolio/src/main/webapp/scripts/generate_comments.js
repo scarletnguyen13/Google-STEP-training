@@ -1,43 +1,7 @@
 import { convertMillisecondsToLocaleString } from './helpers.js';
 
-let comments = [
-  // Mock Data
-  {
-    "content": "I went here to write some random thoughts",
-    "timestamp": 1591035530066,
-    "username": "Rough Bush"
-  }
-];
-
 const hamburgerMenu = document.getElementById('hamburger-menu');
 const commentList = document.getElementById('comment-list');
-
-/**
- * @param {string} action
- * @param {FormData} formData
- */
-const fetchComments = async (action, formData) => {
-  const response = await fetch('/comment', {
-    method: action,
-    body: formData,
-  });
-  const updatedComments = await response.json();
-  comments = updatedComments;
-}
-
-hamburgerMenu.addEventListener('click', () => {
-  hamburgerMenu.classList.toggle("change");
-  hamburgerMenu.classList.toggle("visible");
-  document.getElementById('comments-container').classList.toggle('visible');
-  fetchComments('GET', null);
-});
-
-document.getElementById('comment-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const form = e.currentTarget;
-  const data = new FormData(form);
-  fetchComments('POST', data);
-});
 
 /** @returns {Element} */
 const createProfileImage = () => {
@@ -104,7 +68,41 @@ const createCommentContainer = (comment) => {
   return commentContainer;
 }
 
-comments.map((comment) => {
-  const commentContainer = createCommentContainer(comment);
-  commentList.prepend(commentContainer);
-})
+const renderCommentList = (comments) => {
+  commentList.innerHTML = '';
+  comments.map((comment) => {
+    const commentContainer = createCommentContainer(comment);
+    commentList.prepend(commentContainer);
+  })
+}
+
+/**
+ * @param {string} action
+ * @param {FormData} formData
+ */
+const fetchComments = async (action, data) => {
+  const response = await fetch('/comment', {
+    method: action,
+    body: data,
+  });
+  const updatedComments = await response.json();
+  if (updatedComments !== undefined) {
+    renderCommentList(updatedComments);
+  }
+}
+
+hamburgerMenu.addEventListener('click', () => {
+  hamburgerMenu.classList.toggle("change");
+  hamburgerMenu.classList.toggle("visible");
+  document.getElementById('comments-container').classList.toggle('visible');
+  fetchComments('GET', null);
+});
+
+document.getElementById('comment-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.currentTarget;
+  if (form.checkValidity()) {
+    fetchComments('POST', form.comment.value);
+    form.reset();
+  }
+});
