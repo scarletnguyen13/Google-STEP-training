@@ -1,6 +1,7 @@
 /**
  * @param {number} radians
  * @param {number} radius
+ * @returns {number} 
  */
 function getCircleX(radians, radius) {
   return Math.cos(radians) * radius;
@@ -9,12 +10,16 @@ function getCircleX(radians, radius) {
 /**
  * @param {number} radians
  * @param {number} radius
+ * @returns {number} 
  */
 function getCircleY(radians, radius) {
   return Math.sin(radians) * radius;
 }
 
-/** @param {number} number */
+/** 
+ * @param {number} number
+ * @returns {string} 
+ */
 const convertNumberToPixelString = (number) => {
   return `${number}px`;
 }
@@ -28,9 +33,19 @@ const setContentVisibility = (elementId, isVisible) => {
   document.getElementById(elementId).style.display = displayType;
 }
 
+/**
+ * @param {long} milliseconds
+ * @returns {string} 
+ */
+const convertMillisecondsToLocaleString = (milliseconds) => {
+  const date = new Date(milliseconds);
+  return date.toLocaleDateString();
+}
+
 export { 
   getCircleX,
   getCircleY,
   convertNumberToPixelString,
-  setContentVisibility
+  setContentVisibility,
+  convertMillisecondsToLocaleString
 }

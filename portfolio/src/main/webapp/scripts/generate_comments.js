@@ -1,3 +1,5 @@
+import { convertMillisecondsToLocaleString } from './helpers.js';
+
 let comments = [
   // Mock Data
   {
@@ -8,6 +10,7 @@ let comments = [
 ];
 
 const hamburgerMenu = document.getElementById('hamburger-menu');
+const commentList = document.getElementById('comment-list');
 
 hamburgerMenu.addEventListener('click', async () => {
   hamburgerMenu.classList.toggle("change");
@@ -15,7 +18,6 @@ hamburgerMenu.addEventListener('click', async () => {
   document.getElementById('comments-container').classList.toggle('visible');
 
   if (hamburgerMenu.classList.contains('visible')) {
-    console.log("when click burger");
     const response = await fetch('/comment');
     const updatedComments = await response.json();
     comments = updatedComments;
@@ -35,26 +37,32 @@ document.getElementById('comment-form').addEventListener('submit', async (e) => 
   comments = updatedComments;
 });
 
-const convertMillisecondsToLocaleString = (milliseconds) => {
-  const date = new Date(milliseconds);
-  return date.toLocaleDateString();
-}
-
-const createCommentHeader = (comment) => {
-  const commentHeader = document.createElement('div');
-  commentHeader.className = 'comment-header';
-
+/** @returns {Element} */
+const createProfileImage = () => {
   const profileImage = document.createElement('img');
   profileImage.className = 'profile-image';
   profileImage.src = '../images/profile-placeholder.png';
   profileImage.alt = "Profile Placeholder";
+  return profileImage;
+}
+
+/**
+ * @param {long} timestamp
+ * @param {string} username
+ * @returns {Element} 
+ */
+const createCommentHeader = (timestamp, username) => {
+  const commentHeader = document.createElement('div');
+  commentHeader.className = 'comment-header';
+
+  const profileImage = createProfileImage();
 
   const usernameText = document.createElement('b');
-  usernameText.innerHTML = comment.username;
+  usernameText.innerHTML = username;
 
   const createdAtText = document.createElement('p');
   createdAtText.innerHTML = 
-    convertMillisecondsToLocaleString(comment.timestamp);
+    convertMillisecondsToLocaleString(timestamp);
 
   commentHeader.appendChild(profileImage);
   commentHeader.appendChild(usernameText);
@@ -63,18 +71,38 @@ const createCommentHeader = (comment) => {
   return commentHeader;
 }
 
-const commentList = document.getElementById('comment-list');
+/**
+ * @param {string} content
+ * @returns {Element} 
+ */
+const createCommentBody = (content) => {
+  const commentBody = document.createElement('p');
+  commentBody.innerHTML = `> ${content}`;
+  return commentBody;
+}
 
-comments.map((comment) => {
+/**
+ * @param {object} comment
+ * @param {long} comment.timestamp
+ * @param {string} comment.username
+ * @param {string} comment.content
+ * @returns {Element} 
+ */
+const createCommentContainer = (comment) => {
+  const { timestamp, username, content } = comment;
   const commentContainer = document.createElement('li');
   commentContainer.className = 'comment';
 
-  const commentHeader = createCommentHeader(comment);
-  const commentBody = document.createElement('p');
-  commentBody.innerHTML = `> ${comment.content}`;
+  const commentHeader = createCommentHeader(timestamp, username);
+  const commentBody = createCommentBody(content);
 
   commentContainer.appendChild(commentHeader);
   commentContainer.appendChild(commentBody);
 
+  return commentContainer;
+}
+
+comments.map((comment) => {
+  const commentContainer = createCommentContainer(comment);
   commentList.prepend(commentContainer);
 })
