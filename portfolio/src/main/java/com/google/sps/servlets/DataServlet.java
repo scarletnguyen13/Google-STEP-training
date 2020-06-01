@@ -48,7 +48,7 @@ public class DataServlet extends HttpServlet {
     }
     
     String json = Comment.convertToJson(comments);
-    response.getWriter().append(json);
+    response.getWriter().print(json);
   }
 
   @Override
@@ -57,5 +57,6 @@ public class DataServlet extends HttpServlet {
     Entity commentEntity = Comment.createCommentEntity(commentString);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
+    doGet(request, response);
   }
 }
