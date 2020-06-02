@@ -14,15 +14,15 @@
 
 /** @param {string} url */
 function loadScript(url) {    
-    const head = document.getElementsByTagName('head')[0];
-    const script = document.createElement('script');
-    script.type = 'module';
-    script.src = url;
-    head.appendChild(script);
+  const head = document.getElementsByTagName('head')[0];
+  const script = document.createElement('script');
+  script.type = 'module';
+  script.src = url;
+  head.appendChild(script);
 }
 
 loadScript('./scripts/generate_background.js');
 loadScript('./scripts/generate_satellites.js');
 loadScript('./scripts/generate_content.js');
 loadScript('./scripts/generate_contact_content.js');
-
+loadScript('./scripts/generate_comments.js');

@@ -1,0 +1,54 @@
+#logo {
+  width: 150px;
+  user-select: none;
+}
+
+#menu-container {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  border-radius: 150px;
+  margin: 150px;
+}
+
+.satellite {
+  position: absolute;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.938);
+}
+
+.icon {
+  position: absolute;
+  top: 30%;
+  left: 25%;
+  user-select: none;
+}
+
+#me {
+  top: 5px;
+}
+
+#contact {
+  bottom: 50px;
+  text-align: center;
+  margin-top: 30px;
+}
+
+#work {
+  top: 350px;
+  left: 50px;
+}
+
+#code {
+  bottom: 250px;
+  right: 50px;
+}
+
+#education {
+  top: 350px;
+  right: 50px;
+}
+
+#achievement {
+  bottom: 250px;
+  left: 50px;
+}

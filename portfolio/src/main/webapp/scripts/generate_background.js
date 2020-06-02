@@ -11,7 +11,7 @@ const generateRandomStyle = () => {
   const randomSize = `${Math.random()}em`;
   return {
     background: BACKGROUND_RANDOM_COLORS[randomColorIndex],
-    left: `${Math.floor(Math.random() * 100)}vw`,
+    left: `${Math.floor(Math.random() * 90)}vw`,
     top: `${Math.floor(Math.random() * 90)}vh`,
     transform: `scale(${Math.random()})`,
     width: randomSize,
@@ -25,7 +25,7 @@ for (let i = 0; i < NUMBER_OF_BACKGROUND_BALLS; i++) {
   Object.assign(ball.style, generateRandomStyle())
   
   balls.push(ball);
-  document.body.append(ball);
+  document.getElementById('content').append(ball);
 }
 
 // Keyframes
