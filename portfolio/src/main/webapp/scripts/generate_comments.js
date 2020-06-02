@@ -65,6 +65,7 @@ const createCommentContainer = (comment) => {
   return commentContainer;
 }
 
+/** @param {Array.object} comments responded objects from API */
 const renderCommentList = (comments) => {
   const commentList = document.getElementById('comment-list');
   commentList.innerHTML = '';
