@@ -1,8 +1,5 @@
 import { convertMillisecondsToLocaleString } from './helpers.js';
 
-const hamburgerMenu = document.getElementById('hamburger-menu');
-const commentList = document.getElementById('comment-list');
-
 /** @returns {Element} */
 const createProfileImage = () => {
   const profileImage = document.createElement('img');
@@ -69,6 +66,7 @@ const createCommentContainer = (comment) => {
 }
 
 const renderCommentList = (comments) => {
+  const commentList = document.getElementById('comment-list');
   commentList.innerHTML = '';
   comments.map((comment) => {
     const commentContainer = createCommentContainer(comment);
@@ -77,14 +75,11 @@ const renderCommentList = (comments) => {
 }
 
 /**
- * @param {string} action
- * @param {FormData} formData
+ * @param {string} method
+ * @param {string} body
  */
-const fetchComments = async (action, data) => {
-  const response = await fetch('/comment', {
-    method: action,
-    body: data,
-  });
+const requestComments = async (method, body) => {
+  const response = await fetch('/comment', { method, body });
   const updatedComments = await response.json();
   if (updatedComments !== undefined) {
     document.getElementById('comment-header-text').innerHTML = 
@@ -93,18 +88,18 @@ const fetchComments = async (action, data) => {
   }
 }
 
-hamburgerMenu.addEventListener('click', () => {
-  hamburgerMenu.classList.toggle("change");
-  hamburgerMenu.classList.toggle("visible");
+document.getElementById('hamburger-menu').onclick = function() {
+  this.classList.toggle("change"); // toggles between 3-bar and X shape
+  this.classList.toggle("visible");
   document.getElementById('comments-container').classList.toggle('visible');
-  fetchComments('GET', null);
-});
+  requestComments('GET', null); // get all comments
+};
 
-document.getElementById('comment-form').addEventListener('submit', async (e) => {
+document.getElementById('comment-form').addEventListener('submit', (e) => {
   e.preventDefault();
   const form = e.currentTarget;
   if (form.checkValidity()) {
-    fetchComments('POST', form.comment.value);
+    requestComments('POST', form.comment.value); // create new comment
     form.reset();
   }
 });
