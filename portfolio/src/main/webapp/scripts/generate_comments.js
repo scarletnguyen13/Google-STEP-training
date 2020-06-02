@@ -1,4 +1,5 @@
 import { convertMillisecondsToLocaleString } from './helpers.js';
+import { DEFAULT_COMMENT_LIST_SIZE } from './constants.js';
 
 /** @returns {Element} */
 const createProfileImage = () => {
@@ -71,8 +72,22 @@ const renderCommentList = (comments) => {
   commentList.innerHTML = '';
   comments.map((comment) => {
     const commentContainer = createCommentContainer(comment);
-    commentList.prepend(commentContainer);
+    commentList.appendChild(commentContainer);
   })
+}
+
+const slider = document.getElementById('comment-slider');
+let commentList = [];
+
+const getCorrectListSize = (listLength) => {
+  return listLength < DEFAULT_COMMENT_LIST_SIZE ? 
+    listLength : 
+    DEFAULT_COMMENT_LIST_SIZE
+}
+
+const formatCommentHeaderText = (outOf, total) => {
+  document.getElementById('comment-header-text').innerHTML = 
+    `Comments (${outOf}/${total})`;
 }
 
 /**
@@ -83,17 +98,41 @@ const requestComments = async (method, body) => {
   const response = await fetch('/comment', { method, body });
   const updatedComments = await response.json();
   if (updatedComments !== undefined) {
-    document.getElementById('comment-header-text').innerHTML = 
-      `Comments (${updatedComments.length})`
-    renderCommentList(updatedComments);
+    const listLength = getCorrectListSize(updatedComments.length); 
+    formatCommentHeaderText(listLength, updatedComments.length);
+    slider.max = updatedComments.length;
+    slider.value = listLength;
+    commentList = updatedComments.slice();
+    renderCommentList(updatedComments.slice(0, listLength));
   }
 }
 
 document.getElementById('hamburger-menu').onclick = function() {
-  this.classList.toggle("change"); // toggles between 3-bar and X shape
+  this.classList.toggle("change-shape"); // toggles between 3-bar and X shape
   this.classList.toggle("visible");
   document.getElementById('comments-container').classList.toggle('visible');
   requestComments('GET', null); // get all comments
+};
+
+document.getElementById('remove-button').onclick = function() {
+  const message = 'Are you sure to delete ALL comments?';
+  if (window.confirm(message)) {
+    emptyCommentList();
+    formatCommentHeaderText(0, 0);
+    requestComments('DELETE', null);
+  }
+};
+
+const emptyCommentList = () => {
+  document.getElementById('comment-list').innerHTML = '';
+  commentList = [];
+  slider.max = 0;
+  renderCommentList(commentList);
+}
+
+slider.oninput = function() {
+  formatCommentHeaderText(this.value, commentList.length);
+  renderCommentList(commentList.slice(0, this.value));
 };
 
 document.getElementById('comment-form').addEventListener('submit', (e) => {
