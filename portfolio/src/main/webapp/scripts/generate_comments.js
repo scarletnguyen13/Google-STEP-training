@@ -96,7 +96,7 @@ const requestComments = async (method, body) => {
 }
 
 document.getElementById('hamburger-menu').onclick = function() {
-  this.classList.toggle("change"); // toggles between 3-bar and X shape
+  this.classList.toggle("changeShape"); // toggles between 3-bar and X shape
   this.classList.toggle("visible");
   document.getElementById('comments-container').classList.toggle('visible');
   requestComments('GET', null); // get all comments
