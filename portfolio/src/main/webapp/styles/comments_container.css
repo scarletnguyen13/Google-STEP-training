@@ -3,6 +3,7 @@
 }
 
 #comments-container {
+  text-align: center;
   display: none;
   position: relative;
   padding: 10px;
