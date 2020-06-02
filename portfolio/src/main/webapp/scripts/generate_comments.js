@@ -71,12 +71,13 @@ const renderCommentList = (comments) => {
   commentList.innerHTML = '';
   comments.map((comment) => {
     const commentContainer = createCommentContainer(comment);
-    commentList.prepend(commentContainer);
+    commentList.appendChild(commentContainer);
   })
 }
 
 const slider = document.getElementById('comment-slider');
 let commentList = [];
+const DEFAULT_SIZE = 5;
 
 /**
  * @param {string} method
@@ -86,12 +87,13 @@ const requestComments = async (method, body) => {
   const response = await fetch('/comment', { method, body });
   const updatedComments = await response.json();
   if (updatedComments !== undefined) {
+    const listLength = updatedComments.length < DEFAULT_SIZE ? updatedComments.length : DEFAULT_SIZE; 
     document.getElementById('comment-header-text').innerHTML = 
-      `Comments (${updatedComments.length})`;
+      `Comments (${listLength}/${updatedComments.length})`;
     slider.max = updatedComments.length;
-    slider.value = slider.max;
+    slider.value = listLength;
     commentList = updatedComments.slice();
-    renderCommentList(updatedComments);
+    renderCommentList(updatedComments.slice(0, listLength));
   }
 }
 
@@ -105,13 +107,22 @@ document.getElementById('hamburger-menu').onclick = function() {
 document.getElementById('remove-button').onclick = function() {
   const message = 'Are you sure to delete ALL comments?';
   if (window.confirm(message)) {
+    emptyCommentList();
+    document.getElementById('comment-header-text').innerHTML = 'Comments (0/0)';
     requestComments('DELETE', null);
   }
 };
 
+const emptyCommentList = () => {
+  document.getElementById('comment-list').innerHTML = '';
+  commentList = [];
+  slider.max = 0;
+  renderCommentList(commentList);
+}
+
 slider.oninput = function() {
   document.getElementById('comment-header-text').innerHTML = 
-    `Comments (${this.value})`;
+    `Comments (${this.value}/${commentList.length})`;
   renderCommentList(commentList.slice(0, this.value));
 };
 
