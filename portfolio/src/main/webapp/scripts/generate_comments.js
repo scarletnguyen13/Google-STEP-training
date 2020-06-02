@@ -1,4 +1,5 @@
 import { convertMillisecondsToLocaleString } from './helpers.js';
+import { DEFAULT_COMMENT_LIST_SIZE } from './constants.js';
 
 /** @returns {Element} */
 const createProfileImage = () => {
@@ -77,7 +78,17 @@ const renderCommentList = (comments) => {
 
 const slider = document.getElementById('comment-slider');
 let commentList = [];
-const DEFAULT_SIZE = 5;
+
+const getCorrectListSize = (listLength) => {
+  return listLength < DEFAULT_COMMENT_LIST_SIZE ? 
+    listLength : 
+    DEFAULT_COMMENT_LIST_SIZE
+}
+
+const formatCommentHeaderText = (outOf, total) => {
+  document.getElementById('comment-header-text').innerHTML = 
+    `Comments (${outOf}/${total})`;
+}
 
 /**
  * @param {string} method
@@ -87,9 +98,8 @@ const requestComments = async (method, body) => {
   const response = await fetch('/comment', { method, body });
   const updatedComments = await response.json();
   if (updatedComments !== undefined) {
-    const listLength = updatedComments.length < DEFAULT_SIZE ? updatedComments.length : DEFAULT_SIZE; 
-    document.getElementById('comment-header-text').innerHTML = 
-      `Comments (${listLength}/${updatedComments.length})`;
+    const listLength = getCorrectListSize(updatedComments.length); 
+    formatCommentHeaderText(listLength, updatedComments.length);
     slider.max = updatedComments.length;
     slider.value = listLength;
     commentList = updatedComments.slice();
@@ -108,7 +118,7 @@ document.getElementById('remove-button').onclick = function() {
   const message = 'Are you sure to delete ALL comments?';
   if (window.confirm(message)) {
     emptyCommentList();
-    document.getElementById('comment-header-text').innerHTML = 'Comments (0/0)';
+    formatCommentHeaderText(0, 0);
     requestComments('DELETE', null);
   }
 };
@@ -121,8 +131,7 @@ const emptyCommentList = () => {
 }
 
 slider.oninput = function() {
-  document.getElementById('comment-header-text').innerHTML = 
-    `Comments (${this.value}/${commentList.length})`;
+  formatCommentHeaderText(this.value, commentList.length);
   renderCommentList(commentList.slice(0, this.value));
 };
 

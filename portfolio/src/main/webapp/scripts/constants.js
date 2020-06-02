@@ -11,7 +11,6 @@ const FULL_CIRCLE_DEGREE = 360;
 const MENU_RADIUS = 250;
 const SATELLITE_RADIUS = 90;
 
-
 const CONTACT = {
   'github': 'https://github.com/scarletnguyen13',
   'linkedin': 'https://www.linkedin.com/in/scarletnguyen/',
@@ -71,6 +70,8 @@ const ACHIEVEMENT = {
 
 const CONTENTS = [CODE, EDUCATION, PERSONAL_INFO, EXPERIENCE, ACHIEVEMENT];
 
+const DEFAULT_COMMENT_LIST_SIZE = 5;
+
 export { 
   GOOGLE_COLORS,
   BACKGROUND_RANDOM_COLORS,
@@ -82,5 +83,6 @@ export {
   CONTACT,
   CONTENTS,
   TAG_COLORS,
-  HEADERS
+  HEADERS,
+  DEFAULT_COMMENT_LIST_SIZE
 }
