@@ -75,6 +75,9 @@ const renderCommentList = (comments) => {
   })
 }
 
+const slider = document.getElementById('comment-slider');
+let commentList = [];
+
 /**
  * @param {string} method
  * @param {string} body
@@ -84,7 +87,10 @@ const requestComments = async (method, body) => {
   const updatedComments = await response.json();
   if (updatedComments !== undefined) {
     document.getElementById('comment-header-text').innerHTML = 
-      `Comments (${updatedComments.length})`
+      `Comments (${updatedComments.length})`;
+    slider.max = updatedComments.length;
+    slider.value = slider.max;
+    commentList = updatedComments.slice();
     renderCommentList(updatedComments);
   }
 }
@@ -94,6 +100,19 @@ document.getElementById('hamburger-menu').onclick = function() {
   this.classList.toggle("visible");
   document.getElementById('comments-container').classList.toggle('visible');
   requestComments('GET', null); // get all comments
+};
+
+document.getElementById('remove-button').onclick = function() {
+  const message = 'Are you sure to delete ALL comments?';
+  if (window.confirm(message)) {
+    requestComments('DELETE', null);
+  }
+};
+
+slider.oninput = function() {
+  document.getElementById('comment-header-text').innerHTML = 
+    `Comments (${this.value})`;
+  renderCommentList(commentList.slice(0, this.value));
 };
 
 document.getElementById('comment-form').addEventListener('submit', (e) => {

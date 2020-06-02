@@ -60,4 +60,15 @@ public class CommentServlet extends HttpServlet {
     datastore.put(commentEntity);
     doGet(request, response);
   }
+
+  @Override
+  public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Query query = new Query("Comment").setKeysOnly();
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+    for (Entity entity : results.asIterable()) {
+      datastore.delete(entity.getKey());
+    }
+    doGet(request, response);
+  }
 }
