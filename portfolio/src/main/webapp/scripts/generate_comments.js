@@ -87,6 +87,8 @@ const fetchComments = async (action, data) => {
   });
   const updatedComments = await response.json();
   if (updatedComments !== undefined) {
+    document.getElementById('comment-header-text').innerHTML = 
+      `Comments (${updatedComments.length})`
     renderCommentList(updatedComments);
   }
 }

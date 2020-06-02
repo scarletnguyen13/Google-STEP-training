@@ -176,6 +176,7 @@ h1 {
   position: relative;
   padding: 10px;
   width: 400px;
+  color: rgb(230, 230, 230);
 }
 
 .visible {
@@ -225,6 +226,7 @@ ul {
 }
 
 .comment-list {
+  text-align: center;
   list-style-type: none;
   width: 100%;
   min-height: 50px;
@@ -239,7 +241,7 @@ ul {
   flex-direction: column;
   justify-content: space-between;
   user-select: none;
-  background-color: rgb(111, 111, 111);
+  background-color: rgb(68, 68, 68);
   color: #dadada;
   margin-bottom: 30px;
 }
@@ -283,16 +285,17 @@ ul {
   font-size: 15px;
   padding: 10px;
   border-radius: 10px;
-  background-color: #d4d4d4;
+  background-color: #2d2d2d;
+  color: #b1b1b1;
   outline: none;
 }
 
 .send-button {
-  height: 30px;
-  width: 20%;
   border-radius: 5px;
   background-color: rgb(221, 0, 0);
   color: white;
   border: none;
   outline: none;
+  font-size: 15px;
+  padding: 10px;
 }
