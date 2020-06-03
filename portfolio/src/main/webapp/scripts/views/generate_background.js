@@ -1,5 +1,5 @@
-import { BACKGROUND_RANDOM_COLORS, NUMBER_OF_BACKGROUND_BALLS } from './constants.js';
-import { Coordinates } from './models/coordinates.js'; 
+import { BACKGROUND_RANDOM_COLORS, NUMBER_OF_BACKGROUND_BALLS } from '../constants.js';
+import { Coordinates } from '../models/coordinates.js'; 
 
 const balls = [];
 

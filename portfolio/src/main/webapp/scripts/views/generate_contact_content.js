@@ -1,4 +1,4 @@
-import { CONTACT } from './constants.js';
+import { CONTACT } from '../constants.js';
 
 const contactContainer = document.getElementById('contact');
 
