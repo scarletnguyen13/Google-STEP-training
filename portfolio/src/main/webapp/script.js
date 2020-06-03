@@ -21,8 +21,8 @@ function loadScript(url) {
   head.appendChild(script);
 }
 
-loadScript('./scripts/generate_background.js');
-loadScript('./scripts/generate_satellites.js');
-loadScript('./scripts/generate_content.js');
-loadScript('./scripts/generate_contact_content.js');
-loadScript('./scripts/generate_comments.js');
+loadScript('./scripts/views/generate_background.js');
+loadScript('./scripts/views/generate_satellites.js');
+loadScript('./scripts/views/generate_content.js');
+loadScript('./scripts/views/generate_contact_content.js');
+loadScript('./scripts/request_comments.js');

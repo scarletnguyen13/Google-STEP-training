@@ -1,4 +1,4 @@
-import { ICONS, CONTENTS, GOOGLE_COLORS, TAG_COLORS, HEADERS } from './constants.js';
+import { ICONS, CONTENTS, GOOGLE_COLORS, TAG_COLORS, HEADERS } from '../constants.js';
 
 const containerIds = ICONS.slice(1); // removes Contact
 

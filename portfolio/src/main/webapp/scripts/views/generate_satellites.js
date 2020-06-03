@@ -3,12 +3,12 @@ import {
   ICONS,
   SATELLITE_RADIUS,
   MENU_RADIUS
-} from './constants.js';
+} from '../constants.js';
 
 import {
   convertNumberToPixelString,
   setContentVisibility
-} from './helpers.js';
+} from '../helpers.js';
 
 import { IconGenerator } from './models/icon_generator.js'; 
 import { Coordinates } from './models/coordinates.js'; 
