@@ -23,6 +23,6 @@ function loadScript(url) {
 
 loadScript('./scripts/views/generate_background.js');
 loadScript('./scripts/views/generate_satellites.js');
-loadScript('./scripts/views/generate_content.js');
-loadScript('./scripts/views/generate_contact_content.js');
+loadScript('./scripts/views/generate_tags.js');
+loadScript('./scripts/views/generate_contact.js');
 loadScript('./scripts/request_comments.js');
