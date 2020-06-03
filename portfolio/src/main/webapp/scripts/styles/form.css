@@ -1,0 +1,31 @@
+#form-container {
+  margin: 30px 0px;
+}
+
+#login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 90%;
+  align-items: center;
+}
+
+.comment-input {
+  margin-bottom: 20px;
+}
+
+#logout { 
+  margin-bottom: 30px; 
+}
+
+#user-container {
+  width: 100%;  
+}
+
+#auth-select {
+  padding: 5px 15px;
+  font-size: 16px;
+  background-color: #d6d6d6;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}

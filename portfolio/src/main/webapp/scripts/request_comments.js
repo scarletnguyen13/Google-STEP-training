@@ -70,11 +70,4 @@ slider.oninput = function() {
   renderCommentList(commentList.slice(0, this.value));
 };
 
-document.getElementById('comment-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const form = e.currentTarget;
-  if (form.checkValidity()) {
-    requestComments('POST', form.comment.value); // create new comment
-    form.reset();
-  }
-});
+export { requestComments };

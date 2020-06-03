@@ -26,3 +26,4 @@ loadScript('./scripts/views/generate_satellites.js');
 loadScript('./scripts/views/generate_tags.js');
 loadScript('./scripts/views/generate_contact.js');
 loadScript('./scripts/request_comments.js');
+loadScript('./scripts/request_auth.js');

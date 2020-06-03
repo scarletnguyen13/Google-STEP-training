@@ -9,12 +9,14 @@ public class Comment {
   private long timestamp;
   private String username;
   private String content;
+  private int likes;
 
-  public Comment(long id, long timestamp, String username, String content) {
+  public Comment(long id, long timestamp, String username, String content, int likes) {
     this.id = id;
     this.timestamp = timestamp;
     this.username = username;
     this.content = content;
+    this.likes = likes;
   }
 
   public static Comment convertEntityToComment(Entity entity) {
@@ -22,8 +24,9 @@ public class Comment {
     long timestamp = (long) entity.getProperty("timestamp");
     String username = (String) entity.getProperty("username");
     String content = (String) entity.getProperty("content");
+    int likes = (int) entity.getProperty("likes");
 
-    Comment comment = new Comment(id, timestamp, username, content);
+    Comment comment = new Comment(id, timestamp, username, content, likes);
     return comment;
   }
 
@@ -32,6 +35,7 @@ public class Comment {
     commentEntity.setProperty("timestamp", System.currentTimeMillis());
     commentEntity.setProperty("username", RandomNameGenerator.generate());
     commentEntity.setProperty("content", content);
+    commentEntity.setProperty("likes", 0);
     return commentEntity;
   }
 
