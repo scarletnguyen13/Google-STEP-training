@@ -27,6 +27,10 @@ body {
   align-items: center;
 }
 
+.margin-top-bot {
+  margin: 20px 0px;
+}
+
 #content {
   overflow: hidden;
   position: sticky;
@@ -63,7 +67,7 @@ h1 {
 	}
 }
 
-@media screen and (max-width: 1816px) {
+@media screen and (max-width: 1816px), screen and (max-height: 1258px) {
   .info-container {
     position: inherit !important;
     width: 725px !important;

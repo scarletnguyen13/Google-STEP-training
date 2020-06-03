@@ -85,6 +85,18 @@ const getCorrectListSize = (listLength) => {
     DEFAULT_COMMENT_LIST_SIZE
 }
 
+const setSliderProps = () => {
+  const defaultLength = getCorrectListSize(commentList.length);
+  slider.max = commentList.length;
+  if (slider.value === "0") {
+    slider.value = defaultLength;
+  }
+}
+
+/**
+ * @param {number} outOf
+ * @param {number} total
+ */
 const formatCommentHeaderText = (outOf, total) => {
   document.getElementById('comment-header-text').innerHTML = 
     `Comments (${outOf}/${total})`;
@@ -98,12 +110,10 @@ const requestComments = async (method, body) => {
   const response = await fetch('/comment', { method, body });
   const updatedComments = await response.json();
   if (updatedComments !== undefined) {
-    const listLength = getCorrectListSize(updatedComments.length); 
-    formatCommentHeaderText(listLength, updatedComments.length);
-    slider.max = updatedComments.length;
-    slider.value = listLength;
     commentList = updatedComments.slice();
-    renderCommentList(updatedComments.slice(0, listLength));
+    setSliderProps();
+    formatCommentHeaderText(slider.value, updatedComments.length);
+    renderCommentList(updatedComments.slice(0, slider.value));
   }
 }
 
