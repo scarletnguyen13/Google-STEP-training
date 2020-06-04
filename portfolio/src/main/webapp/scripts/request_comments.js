@@ -1,5 +1,6 @@
 import { DEFAULT_COMMENT_LIST_SIZE } from './constants.js';
 import { renderCommentList } from './views/generate_comments.js';
+import { app } from './firebase.js';
 
 const slider = document.getElementById('comment-slider');
 let commentList = [];
@@ -32,7 +33,8 @@ const formatCommentHeaderText = (outOf, total) => {
  * @param {string} body
  */
 const requestComments = async (method, body) => {
-  const response = await fetch('/comment', { method, body });
+  const user = firebase.auth().currentUser;
+  const response = await fetch(`/comment?user=${user.uid}`, { method, body });
   const updatedComments = await response.json();
   if (updatedComments !== undefined) {
     commentList = updatedComments.slice();
@@ -49,18 +51,9 @@ document.getElementById('hamburger-menu').onclick = function() {
   requestComments('GET', null); // get all comments
 };
 
-const emptyCommentList = () => {
-  document.getElementById('comment-list').innerHTML = '';
-  commentList = [];
-  slider.max = 0;
-  renderCommentList(commentList);
-}
-
 document.getElementById('remove-button').onclick = function() {
   const message = 'Are you sure to delete ALL comments?';
   if (window.confirm(message)) {
-    emptyCommentList();
-    formatCommentHeaderText(0, 0);
     requestComments('DELETE', null);
   }
 };

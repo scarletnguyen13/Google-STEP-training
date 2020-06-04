@@ -6,7 +6,9 @@ const renderCorrectForm = async () => {
   formContainer.innerHTML = '';
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      formContainer.appendChild(createUserContainer(user.email));
+      formContainer.appendChild(
+        createUserContainer(user.email, user.displayName)
+      );
       formContainer.appendChild(createCommentForm());
     } else {
       formContainer.appendChild(createAuthSelect());
@@ -17,13 +19,22 @@ const renderCorrectForm = async () => {
 
 renderCorrectForm();
 
-const createUserContainer = (email) => {
+const createUserContainer = (email, username) => {
   const userContainer = document.createElement('div');
   userContainer.id = 'user-container';
   userContainer.className = 'horizontal-container margin-top-bot';
   
+  const infoContainer = document.createElement('div');
+  const headerText = document.createElement('h2');
+  headerText.innerHTML = 'User';
   const emailText = document.createElement('p');
-  emailText.innerHTML = email;
+  emailText.innerHTML = `Email: ${email}`;
+  const usernameText = document.createElement('p');
+  usernameText.innerHTML = `Username: ${username}`;
+
+  infoContainer.appendChild(headerText);
+  infoContainer.appendChild(emailText);
+  infoContainer.appendChild(usernameText);
 
   const logoutButton = createButton('Logout');
   logoutButton.onclick = function() {
@@ -31,7 +42,7 @@ const createUserContainer = (email) => {
     renderCorrectForm();
   }
 
-  userContainer.appendChild(emailText);
+  userContainer.appendChild(infoContainer);
   userContainer.appendChild(logoutButton);
   return userContainer;
 }
@@ -50,6 +61,23 @@ const createInput = (value) => {
   return input;
 }
 
+const handleError = (error) => {
+  alert(error.code);
+  alert(error.message);
+}
+
+const signup = async (email, password, username) => {
+  try {
+    await firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(function(result) {
+      result.user.updateProfile({ displayName: username })
+    })
+    renderCorrectForm();
+  } catch (error) {
+    handleError(error);
+  }
+}
+
 const login = async (email, password) => {
   try {
     await app
@@ -57,7 +85,7 @@ const login = async (email, password) => {
       .signInWithEmailAndPassword(email, password);
     renderCorrectForm();
   } catch (error) {
-    alert(error);
+    handleError(error);
   }
 }
 
@@ -98,7 +126,15 @@ const createAuthForm = (type) => {
     e.preventDefault();
     const form = e.currentTarget;
     if (form.checkValidity()) {
-      login(form.email.value, form.password.value);
+      if (type === 'Signup') {
+        signup(
+          form.email.value, 
+          form.password.value, 
+          form.username.value
+        );
+      } else {
+        login(form.email.value, form.password.value);
+      }
     }
   });
 
@@ -140,7 +176,11 @@ const createCommentForm = () => {
     e.preventDefault();
     const form = e.currentTarget;
     if (form.checkValidity()) {
-      requestComments('POST', form.comment.value); // create new comment
+      const formData = new FormData();
+      const user = firebase.auth().currentUser;
+      formData.append("username", user.displayName);
+      formData.append("content", form.comment.value.replace(/\n/g, "<br />"));
+      requestComments('POST', formData); // create new comment
       form.reset();
     }
   });
