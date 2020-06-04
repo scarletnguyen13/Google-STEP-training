@@ -42,7 +42,13 @@ public class CommentServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
 
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+    Filter publicOnlyFilter = new FilterPredicate(
+      "status", FilterOperator.EQUAL, Comment.Status.PUBLIC.name()
+    );
+    Query query = new Query("Comment")
+      .setFilter(publicOnlyFilter)
+      .addSort("timestamp", SortDirection.DESCENDING);
+
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
@@ -77,12 +83,12 @@ public class CommentServlet extends HttpServlet {
     String userId = request.getParameter("user");
     Filter matchedUserIdFilter = new FilterPredicate("userId", FilterOperator.EQUAL, userId);
     Query query = new Query("Comment")
-      .setFilter(matchedUserIdFilter)
-      .setKeysOnly();
+      .setFilter(matchedUserIdFilter);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
-    for (Entity entity : results.asIterable()) {
-      datastore.delete(entity.getKey());
+    for (Entity commentEntity : results.asIterable()) {
+      commentEntity.setProperty("status", Comment.Status.DELETED.name());
+      datastore.put(commentEntity);
     }
     doGet(request, response);
   }
