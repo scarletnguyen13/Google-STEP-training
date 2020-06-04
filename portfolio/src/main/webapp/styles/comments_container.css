@@ -7,7 +7,7 @@
   position: absolute;
   right: 0;
   padding: 10px;
-  color: rgb(230, 230, 230);
+  color: #e6e6e6;
   height: 98vh;
   overflow: hidden;
   overflow-y: scroll;
@@ -47,7 +47,7 @@ ul {
   flex-direction: column;
   justify-content: space-between;
   user-select: none;
-  background-color: rgb(68, 68, 68);
+  background-color: #444444;
   color: #dadada;
   margin-bottom: 30px;
   width: 360px;
@@ -100,7 +100,7 @@ ul {
 
 .comment-button {
   border-radius: 5px;
-  background-color: rgb(39, 80, 150);
+  background-color: #275096;
   color: #dadada;
   border: none;
   outline: none;
