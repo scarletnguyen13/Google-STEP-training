@@ -1,6 +1,5 @@
-import { DEFAULT_COMMENT_LIST_SIZE } from './constants.js';
-import { renderCommentList } from './views/generate_comments.js';
-import { app } from './firebase.js';
+import { DEFAULT_COMMENT_LIST_SIZE } from '../constants.js';
+import { renderCommentList } from '../views/comments.js';
 
 const slider = document.getElementById('comment-slider');
 let commentList = [];

@@ -21,9 +21,10 @@ function loadScript(url) {
   head.appendChild(script);
 }
 
-loadScript('./scripts/views/generate_background.js');
-loadScript('./scripts/views/generate_satellites.js');
-loadScript('./scripts/views/generate_tags.js');
-loadScript('./scripts/views/generate_contact.js');
-loadScript('./scripts/request_comments.js');
-loadScript('./scripts/request_auth.js');
+loadScript('./scripts/firebase.js');
+loadScript('./scripts/views/background.js');
+loadScript('./scripts/views/menu_satellites.js');
+loadScript('./scripts/views/portfolio_tags.js');
+loadScript('./scripts/views/contact_icons.js');
+loadScript('./scripts/controllers/request_comments.js');
+loadScript('./scripts/controllers/request_auth.js');
