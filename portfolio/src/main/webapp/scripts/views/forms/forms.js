@@ -3,6 +3,7 @@ import { login, signup } from '../../controllers/request_auth.js';
 import { createUserContainer } from './user_info.js';
 import { createAuthSelect } from './auth_select.js';
 import { createInput, createTextarea, createButton } from './utils.js';
+import { convertNewLineToBreakTag } from '../../helpers.js';
 
 firebase.auth().onAuthStateChanged(function(user) {
   const formContainer = document.getElementById('form-container');
@@ -56,7 +57,7 @@ const handleCommentSubmit = (form) => {
     const formData = new FormData();
     const user = firebase.auth().currentUser;
     formData.append("username", user.displayName);
-    formData.append("content", form.comment.value.replace(/\n/g, "<br />"));
+    formData.append("content", convertNewLineToBreakTag(form.comment.value));
     requestComments('POST', formData); // create new comment
     form.reset();
   }

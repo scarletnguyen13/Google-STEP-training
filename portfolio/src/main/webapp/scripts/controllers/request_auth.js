@@ -1,6 +1,7 @@
+import { displayError } from '../views/forms/utils.js';
+
 const handleError = (error) => {
-  alert(error.code);
-  alert(error.message);
+  displayError(error.message);
 }
 
 const signout = async () => {

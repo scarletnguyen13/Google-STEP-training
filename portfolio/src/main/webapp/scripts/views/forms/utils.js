@@ -1,3 +1,5 @@
+import { convertNewLineToBreakTag } from '../../helpers.js';
+
 const createInput = (value) => {
   const input = document.createElement('input');
   const props = {
@@ -38,4 +40,20 @@ const createButton = (value) => {
   return sendButton;
 }
 
-export { createInput, createTextarea, createButton };
+const displayError = (message) => {
+  const authForm = document.getElementById('auth-form');
+
+  const oldMessage = document.getElementById('error-container');
+  if (oldMessage !== null) {
+    authForm.removeChild(oldMessage);
+  }
+
+  const errorContainer = document.createElement('div');
+  errorContainer.id = 'error-container';
+  const messageText = document.createElement('p');
+  messageText.innerHTML = convertNewLineToBreakTag(message);
+  errorContainer.appendChild(messageText);
+  authForm.prepend(errorContainer);
+}
+
+export { createInput, createTextarea, createButton, displayError };

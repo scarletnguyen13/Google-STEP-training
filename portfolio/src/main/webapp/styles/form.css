@@ -62,3 +62,12 @@
   margin-bottom: 20px;
   border-radius: 5px;
 }
+
+#error-container {
+  background-color: #b34f4f;
+  text-align: center;
+  padding: 8px 5px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  width: 300px;
+}
