@@ -2,6 +2,7 @@ package com.google.sps.servlets.models;
 
 import com.google.appengine.api.datastore.Entity;
 import java.util.List;
+import java.util.Arrays;
 import com.google.gson.Gson;
 
 public class Comment {
@@ -54,5 +55,16 @@ public class Comment {
     Gson gson = new Gson();
     String json = gson.toJson(comments);
     return json;
+  }
+
+  public static String[] getCommentData(String requestString) {
+    List<String> dataList = Arrays.asList(requestString.split("\\n+"));
+    String initials = "Content-Disposition: form-data; ";
+    int usernameValueIndex = dataList.indexOf(initials + "name=\"username\"") + 1;
+    int contentValueIndex = dataList.indexOf(initials + "name=\"content\"") + 1;
+    return new String[] {
+      dataList.get(usernameValueIndex),
+      dataList.get(contentValueIndex),
+    };
   }
 }

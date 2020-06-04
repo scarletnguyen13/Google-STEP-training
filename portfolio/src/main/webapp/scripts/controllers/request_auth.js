@@ -1,5 +1,3 @@
-import { renderCorrectForm } from '../views/forms/forms.js';
-
 const handleError = (error) => {
   alert(error.code);
   alert(error.message);
@@ -7,7 +5,6 @@ const handleError = (error) => {
 
 const signout = async () => {
   await firebase.auth().signOut();
-  renderCorrectForm();
 }
 
 const signup = async (email, password, username) => {
@@ -18,7 +15,6 @@ const signup = async (email, password, username) => {
       .then(function(result) {
         result.user.updateProfile({ displayName: username })
       });
-    renderCorrectForm();
   } catch (error) {
     handleError(error);
   }
@@ -29,12 +25,9 @@ const login = async (email, password) => {
     await firebase
       .auth()
       .signInWithEmailAndPassword(email, password);
-    renderCorrectForm();
   } catch (error) {
     handleError(error);
   }
 }
-
-renderCorrectForm();
 
 export { login, signup, signout };

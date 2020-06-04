@@ -4,21 +4,19 @@ import { createUserContainer } from './user_info.js';
 import { createAuthSelect } from './auth_select.js';
 import { createInput, createTextarea, createButton } from './utils.js';
 
-const renderCorrectForm = async () => {
+firebase.auth().onAuthStateChanged(function(user) {
   const formContainer = document.getElementById('form-container');
   formContainer.innerHTML = '';
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      formContainer.appendChild(
-        createUserContainer(user.email, user.displayName)
-      );
-      formContainer.appendChild(createCommentForm());
-    } else {
-      formContainer.appendChild(createAuthSelect());
-      formContainer.appendChild(createAuthForm('Login'));
-    }
-  });
-}
+  if (user) {
+    formContainer.appendChild(
+      createUserContainer(user.email, user.displayName)
+    );
+    formContainer.appendChild(createCommentForm());
+  } else {
+    formContainer.appendChild(createAuthSelect());
+    formContainer.appendChild(createAuthForm('Login'));
+  }
+});
 
 const isSignedUpType = (type) => {
   return type === 'Signup';
@@ -76,4 +74,4 @@ const createCommentForm = () => {
   return commentForm;
 }
 
-export { renderCorrectForm };
+export { createAuthForm };

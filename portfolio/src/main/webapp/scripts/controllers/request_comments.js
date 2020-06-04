@@ -33,7 +33,11 @@ const formatCommentHeaderText = (outOf, total) => {
  */
 const requestComments = async (method, body) => {
   const user = firebase.auth().currentUser;
-  const response = await fetch(`/comment?user=${user.uid}`, { method, body });
+  let url = '/comment';
+  if (user !== null ) {
+    url += `?user=${user.uid}`;
+  }
+  const response = await fetch(url, { method, body });
   const updatedComments = await response.json();
   if (updatedComments !== undefined) {
     commentList = updatedComments.slice();

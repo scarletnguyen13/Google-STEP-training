@@ -1,3 +1,5 @@
+import { createAuthForm } from './forms.js';
+
 const renderForm = (value) => {
   const form = createAuthForm(value);
   const formContainer = document.getElementById('form-container');

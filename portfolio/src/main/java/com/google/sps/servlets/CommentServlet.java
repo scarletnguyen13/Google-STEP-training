@@ -15,6 +15,7 @@
 package com.google.sps.servlets;
 
 import com.google.sps.servlets.models.Comment;
+import com.google.sps.servlets.models.CommentRequestData;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -57,12 +58,15 @@ public class CommentServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String[] requestData = request.getReader().lines().collect(Collectors.joining(System.lineSeparator())).split("\\n+");
-    String[] commentData = getCommentData(requestData);
+    // Join multiple new lines of string to one single string 
+    String requestString = request.getReader().lines()
+      .collect(Collectors.joining(System.lineSeparator()));
+    CommentRequestData commentData = CommentRequestData.extractCommentData(requestString);
+    
     String userId = request.getParameter("user");
-    String username = commentData[0];
-    String content = commentData[1];
-    Entity commentEntity = Comment.createCommentEntity(userId, username, content);
+    Entity commentEntity = Comment.createCommentEntity(
+      userId, commentData.getUsername(), commentData.getContent()
+    );
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
     doGet(request, response);
@@ -81,16 +85,5 @@ public class CommentServlet extends HttpServlet {
       datastore.delete(entity.getKey());
     }
     doGet(request, response);
-  }
-
-  private String[] getCommentData(String[] requestData) {
-    List<String> dataList = Arrays.asList(requestData);
-    String initials = "Content-Disposition: form-data; ";
-    int usernameValueIndex = dataList.indexOf(initials + "name=\"username\"") + 1;
-    int contentValueIndex = dataList.indexOf(initials + "name=\"content\"") + 1;
-    return new String[] {
-      dataList.get(usernameValueIndex),
-      dataList.get(contentValueIndex),
-    };
   }
 }
