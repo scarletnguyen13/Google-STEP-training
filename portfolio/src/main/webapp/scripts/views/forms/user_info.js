@@ -1,4 +1,4 @@
-import { signout } from '../../controllers/request_auth.js';
+import { signout } from '../../controllers/auth_controller.js';
 import { createButton } from './utils.js';
 
 const createUserInfoContainer = () => {
