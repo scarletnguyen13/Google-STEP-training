@@ -1,9 +1,5 @@
 import { displayError } from '../views/forms/utils.js';
 
-const handleError = (error) => {
-  displayError(error.message);
-}
-
 const signout = async () => {
   await firebase.auth().signOut();
 }
@@ -17,7 +13,7 @@ const signup = async (email, password, username) => {
         result.user.updateProfile({ displayName: username })
       });
   } catch (error) {
-    handleError(error);
+    displayError(error.message);
   }
 }
 
@@ -27,7 +23,7 @@ const login = async (email, password) => {
       .auth()
       .signInWithEmailAndPassword(email, password);
   } catch (error) {
-    handleError(error);
+    displayError(error.message);
   }
 }
 

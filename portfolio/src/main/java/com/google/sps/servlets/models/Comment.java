@@ -34,7 +34,7 @@ public class Comment {
     this.status = status;
   }
 
-  public static Comment convertEntityToComment(Entity entity) {
+  public static Comment fromEntity(Entity entity) {
     long id = entity.getKey().getId();
     long timestamp = (long) entity.getProperty("timestamp");
     String userId = (String) entity.getProperty("userId");
@@ -65,16 +65,5 @@ public class Comment {
     Gson gson = new Gson();
     String json = gson.toJson(comments);
     return json;
-  }
-
-  public static String[] getCommentData(String requestString) {
-    List<String> dataList = Arrays.asList(requestString.split("\\n+"));
-    String initials = "Content-Disposition: form-data; ";
-    int usernameValueIndex = dataList.indexOf(initials + "name=\"username\"") + 1;
-    int contentValueIndex = dataList.indexOf(initials + "name=\"content\"") + 1;
-    return new String[] {
-      dataList.get(usernameValueIndex),
-      dataList.get(contentValueIndex),
-    };
   }
 }

@@ -51,13 +51,13 @@ document.getElementById('hamburger-menu').onclick = function() {
   this.classList.toggle("change-shape"); // toggles between 3-bar and X shape
   this.classList.toggle("visible");
   document.getElementById('comments-container').classList.toggle('visible');
-  requestComments('GET', null); // get all comments
+  requestComments('GET', null); // get all comments, null = no body attached in request
 };
 
 document.getElementById('remove-button').onclick = function() {
   const message = 'Are you sure to delete ALL comments?';
   if (window.confirm(message)) {
-    requestComments('DELETE', null);
+    requestComments('DELETE', null); // null = no body attached in request
   }
 };
 

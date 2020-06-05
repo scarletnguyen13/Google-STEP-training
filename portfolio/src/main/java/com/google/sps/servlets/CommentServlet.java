@@ -54,7 +54,7 @@ public class CommentServlet extends HttpServlet {
 
     List<Comment> comments = new ArrayList<>();
     for (Entity entity : results.asIterable()) {
-      Comment comment = Comment.convertEntityToComment(entity);
+      Comment comment = Comment.fromEntity(entity);
       comments.add(comment);
     }
     
@@ -67,7 +67,7 @@ public class CommentServlet extends HttpServlet {
     // Join multiple new lines of string to one single string 
     String requestString = request.getReader().lines()
       .collect(Collectors.joining(System.lineSeparator()));
-    CommentRequestData commentData = CommentRequestData.extractCommentData(requestString);
+    CommentRequestData commentData = CommentRequestData.fromRequestString(requestString);
     
     String userId = request.getParameter("user");
     Entity commentEntity = Comment.createCommentEntity(
