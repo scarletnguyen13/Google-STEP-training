@@ -78,3 +78,12 @@ document.getElementById('comment-form').addEventListener('submit', (e) => {
     form.reset();
   }
 });
+
+(function poll(){
+  $.ajax({ url: "/comment", success: function(updatedComments) {
+    commentList = updatedComments.slice();
+    setSliderProps();
+    formatCommentHeaderText(slider.value, updatedComments.length);
+    renderCommentList(updatedComments.slice(0, slider.value));
+  }, dataType: "json", complete: poll, timeout: 1000 * 60 });
+})();
