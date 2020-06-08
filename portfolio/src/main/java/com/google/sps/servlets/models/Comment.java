@@ -40,6 +40,7 @@ public class Comment {
     String userId = (String) entity.getProperty("userId");
     String username = (String) entity.getProperty("username");
     String content = (String) entity.getProperty("content");
+    // Convert "likes" property to long then cast as int
     int likes = (int) (long) entity.getProperty("likes");
     Status status = Status.valueOf((String) entity.getProperty("status"));
 
@@ -53,7 +54,9 @@ public class Comment {
     commentEntity.setProperty("userId", userId);
     commentEntity.setProperty("username", username);
     commentEntity.setProperty("content", content);
-    commentEntity.setProperty("likes", 0);
+    // "likes" property will be automatically converted to datastore's native 
+    // type => long instead of int (according to the documentation)
+    commentEntity.setProperty("likes", 0); 
     commentEntity.setProperty("status", Status.PUBLIC.name());
     return commentEntity;
   }
