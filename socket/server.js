@@ -2,40 +2,56 @@
 const express = require('express'); 
 const http = require('http');
 const socketIo = require("socket.io");
+const { PubSub } = require('@google-cloud/pubsub');
 
 // Setting up express and adding socketIo middleware
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, { origins: '*:*'});
+const io = socketIo(server);
 
-const port = process.env.PORT || 8081;
-
-let interval;
+const port = process.env.PORT || 8082;
 
 io.on("connection", (socket) => {
   console.log("New client connected");
-  if (interval) {
-    clearInterval(interval);
-  }
-  interval = setInterval(() => getApiAndEmit(socket), 1000);
+  listenForMessages();
   socket.on("disconnect", () => {
     console.log("Client disconnected");
-    clearInterval(interval);
   });
 });
 
-const getApiAndEmit = socket => {
-  const response = new Date();
-  // Emitting a new message. Will be consumed by the client
-  socket.emit("FromAPI", response);
-};
+const socketSubscription = 'socket-sub';
+const timeout = 60;
 
-app.get('/', function (req, res) {
-  res.send('hello world');
-})
+// Creates a client; cache this for further use
+const pubSubClient = new PubSub();
 
-app.post('/', function (req, res) {
-  res.send('hello');
-})
+function listenForMessages() {
+  // References an existing subscription
+  const subscription = pubSubClient.subscription(socketSubscription);
+
+  // Create an event handler to handle messages
+  let messageCount = 0;
+  const messageHandler = message => {
+    console.log(`Received message ${message.id}:`);
+    console.log(`\tData: ${message.data}`);
+    console.log(`\tAttributes: ${message.attributes}`);
+    messageCount += 1;
+    
+    if (messageCount > 0) {
+      io.sockets.emit("comment-updates");
+    }
+
+    // "Ack" (acknowledge receipt of) the message
+    message.ack();
+  };
+
+  // Listen for new messages until timeout is hit
+  subscription.on('message', messageHandler);
+
+  setTimeout(() => {
+    subscription.removeListener('message', messageHandler);
+    console.log(`${messageCount} message(s) received.`);
+  }, timeout * 1000);
+}
 
 server.listen(port, () => console.log(`Listening on port ${port}`));

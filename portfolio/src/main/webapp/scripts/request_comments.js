@@ -78,3 +78,9 @@ document.getElementById('comment-form').addEventListener('submit', (e) => {
     form.reset();
   }
 });
+
+const url = 'https://8082-95fdb458-2882-4799-be53-2a73d1335a77.us-east1.cloudshell.dev/';
+const socket = io.connect(url);
+socket.on("comment-updates", () => {
+  requestComments('GET', null); // get all comments
+});

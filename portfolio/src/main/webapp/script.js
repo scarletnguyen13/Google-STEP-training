@@ -26,8 +26,3 @@ loadScript('./scripts/views/generate_satellites.js');
 loadScript('./scripts/views/generate_tags.js');
 loadScript('./scripts/views/generate_contact.js');
 loadScript('./scripts/request_comments.js');
-
-const socket = io.connect('https://8081-95fdb458-2882-4799-be53-2a73d1335a77.us-east1.cloudshell.dev/');
-socket.on("FromAPI", data => {
-  console.log(data);
-});
