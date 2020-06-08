@@ -30,24 +30,31 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import com.google.api.core.ApiFuture;
+import com.google.api.core.ApiFutureCallback;
+import com.google.api.core.ApiFutures;
+import com.google.api.gax.rpc.ApiException;
+import com.google.cloud.pubsub.v1.Publisher;
+import com.google.cloud.pubsub.v1.TopicAdminClient;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.protobuf.ByteString;
+import com.google.pubsub.v1.ProjectTopicName;
+import com.google.pubsub.v1.PubsubMessage;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 @WebServlet("/comment")
 public class CommentServlet extends HttpServlet {
+
+  private static final String PROJECT_ID = "scarletnguyen-step-2020";
+  private static final String TOPIC_ID = "comment-updates";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
-
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
-
-    List<Comment> comments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
-      Comment comment = Comment.convertEntityToComment(entity);
-      comments.add(comment);
-    }
-    
-    String json = Comment.convertToJson(comments);
+    String json = getAllCommentsInJson();
     response.getWriter().print(json);
   }
 
@@ -59,6 +66,53 @@ public class CommentServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
     doGet(request, response);
+
+    ProjectTopicName commentUpdates = ProjectTopicName.of(PROJECT_ID, TOPIC_ID);
+    Publisher publisher = null;
+    List<ApiFuture<String>> futures = new ArrayList<>();
+
+    try {
+      // Create a publisher instance with default settings bound to the topic
+      publisher = Publisher.newBuilder(commentUpdates).build();
+      String message = "new comment created";
+
+      ByteString data = ByteString.copyFromUtf8(message);
+      PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
+
+      // Once published, returns a server-assigned message id (unique within the topic)
+      ApiFuture<String> future = publisher.publish(pubsubMessage);
+      
+      // Add an asynchronous callback to handle success / failure
+      ApiFutures.addCallback(
+        future,
+        new ApiFutureCallback<String>() {
+
+          @Override
+          public void onFailure(Throwable throwable) {
+            if (throwable instanceof ApiException) {
+              ApiException apiException = ((ApiException) throwable);
+              // details on the API exception
+              System.out.println(apiException.getStatusCode().getCode());
+              System.out.println(apiException.isRetryable());
+            }
+            System.out.println("Error publishing message : " + message);
+          }
+
+          @Override
+          public void onSuccess(String messageId) {
+            // Once published, returns server-assigned message ids (unique within the topic)
+            System.out.println(messageId);
+          }
+        },
+        MoreExecutors.directExecutor());
+      
+    } finally {
+      if (publisher != null) {
+        // When finished with the publisher, shutdown to free up resources.
+        publisher.shutdown();
+        // publisher.awaitTermination(1, TimeUnit.MINUTES);
+      }
+    }
   }
 
   @Override
@@ -69,5 +123,20 @@ public class CommentServlet extends HttpServlet {
     for (Entity entity : results.asIterable()) {
       datastore.delete(entity.getKey());
     }
+  }
+
+  private String getAllCommentsInJson() {
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    List<Comment> comments = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      Comment comment = Comment.convertEntityToComment(entity);
+      comments.add(comment);
+    }
+    
+    String json = Comment.convertToJson(comments);
+    return json;
   }
 }

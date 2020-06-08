@@ -6,7 +6,7 @@ const socketIo = require("socket.io");
 // Setting up express and adding socketIo middleware
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, { origins: '*:*'});
 
 const port = process.env.PORT || 8081;
 
@@ -29,5 +29,13 @@ const getApiAndEmit = socket => {
   // Emitting a new message. Will be consumed by the client
   socket.emit("FromAPI", response);
 };
+
+app.get('/', function (req, res) {
+  res.send('hello world');
+})
+
+app.post('/', function (req, res) {
+  res.send('hello');
+})
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
