@@ -34,16 +34,20 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.google.sps.servlets.exceptions.InvalidMultipartRequest;
 import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.Part;
-import javax.servlet.ServletException;
-import java.util.Map;
 import java.util.NoSuchElementException;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
+import com.google.firebase.auth.FirebaseAuthException;
 
 @WebServlet("/comment")
 @MultipartConfig 
 public class CommentServlet extends HttpServlet {
+
+  public CommentServlet() {
+    FirebaseApp.initializeApp();
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -73,14 +77,18 @@ public class CommentServlet extends HttpServlet {
   // @MultipartConfig
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     RequestData requestData = new RequestData(request);
-    String userId = request.getParameter("user");
+    String tokenId = request.getParameter("id");
     try {
+      FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(tokenId);
+      String userId = decodedToken.getUid();
       Entity commentEntity = Comment.createCommentEntity(
         userId, requestData.get("username"), requestData.get("content")
       );
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(commentEntity);
       doGet(request, response);
+    } catch (FirebaseAuthException e) {
+      e.printStackTrace();
     } catch (NoSuchElementException e) {
       e.printStackTrace();
     }
@@ -88,16 +96,22 @@ public class CommentServlet extends HttpServlet {
 
   @Override
   public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String userId = request.getParameter("user");
-    Filter matchedUserIdFilter = new FilterPredicate("userId", FilterOperator.EQUAL, userId);
-    Query query = new Query("Comment")
-      .setFilter(matchedUserIdFilter);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
-    for (Entity commentEntity : results.asIterable()) {
-      commentEntity.setProperty("status", Comment.Status.DELETED.name());
-      datastore.put(commentEntity);
+    String tokenId = request.getParameter("id");
+    try {
+      FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(tokenId);
+      String userId = decodedToken.getUid();
+      Filter matchedUserIdFilter = new FilterPredicate("userId", FilterOperator.EQUAL, userId);
+      Query query = new Query("Comment")
+        .setFilter(matchedUserIdFilter);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      PreparedQuery results = datastore.prepare(query);
+      for (Entity commentEntity : results.asIterable()) {
+        commentEntity.setProperty("status", Comment.Status.DELETED.name());
+        datastore.put(commentEntity);
+      }
+      doGet(request, response);
+    } catch (FirebaseAuthException e) {
+      e.printStackTrace();
     }
-    doGet(request, response);
   }
 }

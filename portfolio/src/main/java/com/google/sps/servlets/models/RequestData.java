@@ -1,14 +1,10 @@
 package com.google.sps.servlets.models;
 
 import com.google.appengine.api.datastore.Entity;
-import java.util.List;
-import java.util.Arrays;
-import com.google.gson.Gson;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collection;
 import java.util.stream.Collectors;
-
 import com.google.sps.servlets.exceptions.InvalidMultipartRequest;
 import javax.servlet.ServletException;
 import javax.servlet.http.Part;
