@@ -15,7 +15,7 @@
 package com.google.sps.servlets;
 
 import com.google.sps.servlets.models.Comment;
-import com.google.sps.servlets.models.CommentRequestData;
+import com.google.sps.servlets.models.RequestData;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -33,9 +33,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
+
+import com.google.sps.servlets.exceptions.InvalidMultipartRequest;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.Part;
+import javax.servlet.ServletException;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 @WebServlet("/comment")
+@MultipartConfig 
 public class CommentServlet extends HttpServlet {
 
   @Override
@@ -63,19 +70,20 @@ public class CommentServlet extends HttpServlet {
   }
 
   @Override
+  // @MultipartConfig
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Join multiple new lines of string to one single string 
-    String requestString = request.getReader().lines()
-      .collect(Collectors.joining(System.lineSeparator()));
-    CommentRequestData commentData = CommentRequestData.fromRequestString(requestString);
-    
+    RequestData requestData = new RequestData(request);
     String userId = request.getParameter("user");
-    Entity commentEntity = Comment.createCommentEntity(
-      userId, commentData.getUsername(), commentData.getContent()
-    );
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
-    doGet(request, response);
+    try {
+      Entity commentEntity = Comment.createCommentEntity(
+        userId, requestData.get("username"), requestData.get("content")
+      );
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(commentEntity);
+      doGet(request, response);
+    } catch (NoSuchElementException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
