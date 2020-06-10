@@ -38,11 +38,11 @@ const createButton = (value) => {
 }
 
 const displayError = (message) => {
-  const authForm = document.getElementById('auth-form');
+  const form = document.getElementsByTagName('form')[0];
 
   const oldMessage = document.getElementById('error-container');
   if (oldMessage !== null) {
-    authForm.removeChild(oldMessage);
+    form.removeChild(oldMessage);
   }
 
   const errorContainer = document.createElement('div');
@@ -50,7 +50,7 @@ const displayError = (message) => {
   const messageText = document.createElement('p');
   messageText.innerHTML = convertNewLineToBreakTag(message);
   errorContainer.appendChild(messageText);
-  authForm.prepend(errorContainer);
+  form.prepend(errorContainer);
 }
 
 export { createInput, createTextarea, createButton, displayError };
