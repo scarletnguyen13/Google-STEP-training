@@ -46,10 +46,20 @@ const convertMillisecondsToLocaleString = (milliseconds) => {
   return `${dateString}<br />${timeString}`;
 }
 
+const convertNewLineToBreakTag = (text) => {
+  return text.replace(/\n/g, "<br />");
+}
+
+const isSignedUpType = (type) => {
+  return type === 'Signup';
+}
+
 export { 
   getCircleX,
   getCircleY,
   convertNumberToPixelString,
   setContentVisibility,
-  convertMillisecondsToLocaleString
+  convertMillisecondsToLocaleString,
+  convertNewLineToBreakTag,
+  isSignedUpType
 }

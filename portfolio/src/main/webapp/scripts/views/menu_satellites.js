@@ -10,8 +10,8 @@ import {
   setContentVisibility
 } from '../helpers.js';
 
-import { IconGenerator } from './models/icon_generator.js'; 
-import { Coordinates } from './models/coordinates.js'; 
+import { IconGenerator } from '../models/icon_generator.js'; 
+import { Coordinates } from '../models/coordinates.js'; 
 
 const contents = [];
 const menuContainer = document.getElementById('menu-container');

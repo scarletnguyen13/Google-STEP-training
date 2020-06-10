@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Scarlet Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" type="text/css">
     <link rel="shortcut icon" type="image/x-icon" href="./images/logo.ico" />
   </head>
   <body>
@@ -28,16 +28,8 @@
           <input type="range" min="0" value="0" class="slider" id="comment-slider">
           <button id="remove-button">Remove All</button>
         </div>
-        <form id="comment-form">
-          <textarea
-            id="comment-textarea"
-            name="comment"
-            placeholder="Type something..."
-            rows="3"
-            required></textarea>
-          <input class="send-button" type="submit" value="Send"/>
-        </form>
-        <ul id="comment-list">
+        <div class="center" id="form-container"></div>
+        <ul class="center" id="comment-list">
           <p>Loading...</p>
         </ul>
       </div>
@@ -47,6 +39,10 @@
         <div class="bar3"></div>
       </div>
     </div>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-analytics.js"></script>
     <script type="module" src="script.js"></script>
   </body>
 </html>
