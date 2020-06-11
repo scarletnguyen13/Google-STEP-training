@@ -35,8 +35,7 @@ import java.util.stream.Collectors;
 public class CommentServlet extends HttpServlet {
 
   private static final String TOPIC_NAME = "comment-updates";
-  private static final PublishHandler publishHandler = 
-    new PublishHandler("new comment updates", TOPIC_NAME);
+  private static final PublishHandler PUBLISH_HANDLER = new PublishHandler(TOPIC_NAME);
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -52,7 +51,9 @@ public class CommentServlet extends HttpServlet {
     Entity commentEntity = Comment.createCommentEntity(commentString);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
-    publishHandler.publish();
+
+    String commentJson = Comment.convertToJson(commentEntity);
+    PUBLISH_HANDLER.publish(commentJson);
   }
 
   @Override
@@ -63,7 +64,7 @@ public class CommentServlet extends HttpServlet {
     for (Entity entity : results.asIterable()) {
       datastore.delete(entity.getKey());
     }
-    publishHandler.publish();
+    PUBLISH_HANDLER.publish("{ \"message\": \"deleted\" }");
   }
 
   private String getAllCommentsInJson() {

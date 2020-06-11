@@ -37,8 +37,8 @@ function listenForMessages() {
     console.log(`\tAttributes: ${message.attributes}`);
     messageCount += 1;
     
-    if (messageCount > 0) {
-      io.sockets.emit("comment-updates");
+    if (messageCount > 0 && JSON.parse(message.data) !== undefined) {
+      io.sockets.emit("comment-updates", JSON.parse(message.data));
     }
 
     // "Ack" (acknowledge receipt of) the message

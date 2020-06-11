@@ -59,8 +59,6 @@ const emptyCommentList = () => {
 document.getElementById('remove-button').onclick = function() {
   const message = 'Are you sure to delete ALL comments?';
   if (window.confirm(message)) {
-    emptyCommentList();
-    formatCommentHeaderText(0, 0);
     requestComments('DELETE', null);
   }
 };
@@ -81,6 +79,14 @@ document.getElementById('comment-form').addEventListener('submit', (e) => {
 
 const url = 'https://8082-95fdb458-2882-4799-be53-2a73d1335a77.us-east1.cloudshell.dev/';
 const socket = io.connect(url);
-socket.on("comment-updates", () => {
-  requestComments('GET', null); // get all comments
+socket.on("comment-updates", newComment => {
+  if (newComment.message !== undefined && newComment.message === "deleted") {
+    emptyCommentList();
+    formatCommentHeaderText(0, 0);
+  } else {
+    commentList.unshift(newComment);
+    setSliderProps();
+    formatCommentHeaderText(slider.value, commentList.length);
+    renderCommentList(commentList.slice(0, slider.value));
+  }
 });

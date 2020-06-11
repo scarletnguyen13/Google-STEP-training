@@ -24,13 +24,14 @@ public class PublishHandler {
   private ProjectTopicName topic;
   private Publisher publisher;
 
-  public PublishHandler(String message, String topicName) {
-    this.message = message;
+  public PublishHandler(String topicName) {
     this.topic = ProjectTopicName.of(PROJECT_ID, topicName);
     this.publisher = null;
+    this.message = null;
   }
 
-  public void publish() {
+  public void publish(String message) {
+    this.message = message;
     try {
       sendMessageToApi();
     } finally {

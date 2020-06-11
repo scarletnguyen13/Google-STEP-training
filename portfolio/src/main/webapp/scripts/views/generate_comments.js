@@ -67,6 +67,9 @@ const createCommentContainer = (comment) => {
 
 /** @param {Array.object} comments responded objects from API */
 const renderCommentList = (comments) => {
+  comments.sort(function(x, y){
+    return y.timestamp - x.timestamp; // reverse order
+  })
   const commentList = document.getElementById('comment-list');
   commentList.innerHTML = '';
   comments.map((comment) => {
