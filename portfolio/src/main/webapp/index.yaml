@@ -1,0 +1,8 @@
+indexes:
+
+- kind: Comment
+  ancestor: no
+  properties: 
+  - name: status 
+  - name: timestamp 
+    direction: desc

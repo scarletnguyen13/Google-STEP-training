@@ -67,16 +67,20 @@ slider.oninput = function() {
   renderCommentList(commentList.slice(0, this.value));
 };
 
-const url = 'https://8082-95fdb458-2882-4799-be53-2a73d1335a77.us-east1.cloudshell.dev/';
+const addNewCommentToList = newComment => {
+  commentList.unshift(newComment);
+  setSliderProps();
+  formatCommentHeaderText(slider.value, commentList.length);
+  renderCommentList(commentList.slice(0, slider.value));
+}
+
+const url = 'https://socket-dot-scarletnguyen-step-2020.uk.r.appspot.com/';
 const socket = io.connect(url);
 socket.on("comment-updates", newComment => {
   if (newComment.message !== undefined && newComment.message === "deleted") {
     requestComments('GET', null);
   } else {
-    commentList.unshift(newComment);
-    setSliderProps();
-    formatCommentHeaderText(slider.value, commentList.length);
-    renderCommentList(commentList.slice(0, slider.value));
+    addNewCommentToList(newComment);
   }
 });
 
