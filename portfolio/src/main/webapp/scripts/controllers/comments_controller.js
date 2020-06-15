@@ -67,8 +67,7 @@ slider.oninput = function() {
   renderCommentList(commentList.slice(0, this.value));
 };
 
-const addNewCommentToList = newComment => {
-  commentList.unshift(newComment);
+const changeCommentListFormat = () => {
   setSliderProps();
   formatCommentHeaderText(slider.value, commentList.length);
   renderCommentList(commentList.slice(0, slider.value));
@@ -77,11 +76,15 @@ const addNewCommentToList = newComment => {
 const url = 'https://socket-dot-scarletnguyen-step-2020.uk.r.appspot.com/';
 const socket = io.connect(url);
 socket.on("comment-updates", newComment => {
-  if (newComment.message !== undefined && newComment.message === "deleted") {
-    requestComments('GET', null);
-  } else {
-    addNewCommentToList(newComment);
-  }
+  if (newComment !== undefined) {
+    if (newComment.deleted !== undefined) {
+      const userId = newComment.deleted;
+      commentList = commentList.filter(comment => comment.userId !== userId);
+    } else {
+      commentList.unshift(newComment);
+    }
+    changeCommentListFormat();
+  } 
 });
 
 export { requestComments };

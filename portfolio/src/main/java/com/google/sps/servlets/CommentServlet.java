@@ -15,7 +15,7 @@
 package com.google.sps.servlets;
 
 import com.google.sps.servlets.models.Comment;
-import com.google.sps.servlets.models.PublishHandler;
+import com.google.sps.servlets.models.PubSubHandler;
 import com.google.sps.servlets.models.RequestData;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
@@ -46,9 +46,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 @MultipartConfig 
 public class CommentServlet extends HttpServlet {
 
-
   private static final String TOPIC_NAME = "comment-updates";
-  private static final PublishHandler PUBLISH_HANDLER = new PublishHandler(TOPIC_NAME);
 
   public CommentServlet() {
     FirebaseApp.initializeApp();
@@ -66,17 +64,17 @@ public class CommentServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     RequestData requestData = new RequestData(request);
     String tokenId = request.getParameter("id");
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     try {
       FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(tokenId);
       String userId = decodedToken.getUid();
       Entity commentEntity = Comment.createCommentEntity(
         userId, requestData.get("username"), requestData.get("content")
       );
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(commentEntity);
       
       String commentJson = Comment.convertToJson(commentEntity);
-      PUBLISH_HANDLER.publish(commentJson);
+      PubSubHandler.publish(TOPIC_NAME, commentJson);
     } catch (FirebaseAuthException e) {
       e.printStackTrace();
     } catch (NoSuchElementException e) {
@@ -87,19 +85,20 @@ public class CommentServlet extends HttpServlet {
   @Override
   public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String tokenId = request.getParameter("id");
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     try {
       FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(tokenId);
       String userId = decodedToken.getUid();
       Filter matchedUserIdFilter = new FilterPredicate("userId", FilterOperator.EQUAL, userId);
       Query query = new Query("Comment")
         .setFilter(matchedUserIdFilter);
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       PreparedQuery results = datastore.prepare(query);
       for (Entity commentEntity : results.asIterable()) {
         commentEntity.setProperty("status", Comment.Status.DELETED.name());
         datastore.put(commentEntity);
       }
-      PUBLISH_HANDLER.publish("{ \"message\": \"deleted\" }");
+      String message = "{ \"deleted\": \"" + userId + "\" }";
+      PubSubHandler.publish(TOPIC_NAME, message);
     } catch (FirebaseAuthException e) {
       e.printStackTrace();
     }

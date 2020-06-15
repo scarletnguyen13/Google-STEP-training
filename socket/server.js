@@ -12,10 +12,10 @@ const io = socketIo(server);
 const port = process.env.PORT || 8082;
 
 io.on("connection", (socket) => {
-  console.log("New client connected");
+  console.log(`New client ${port} connected`);
   listenForMessages();
   socket.on("disconnect", () => {
-    console.log("Client disconnected");
+    console.log(`Client ${port} disconnected`);
   });
 });
 

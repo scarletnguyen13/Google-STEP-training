@@ -17,54 +17,38 @@ import java.util.concurrent.TimeUnit;
 import java.io.IOException;
 import java.lang.InterruptedException;
 
-public class PublishHandler {
+public class PubSubHandler {
   private static final String PROJECT_ID = "scarletnguyen-step-2020";
+  private static final String LOG_CONTEXT = "(JAVA SERVER) PUBSUB HANDLER LOG: ";
 
-  private String message;
-  private ProjectTopicName topic;
-  private Publisher publisher;
+  public static void publish(String topicName, String message) throws IOException {
+    ProjectTopicName topic = ProjectTopicName.of(PROJECT_ID, topicName);
+    Publisher publisher = Publisher.newBuilder(topic).build();
+    ByteString data = ByteString.copyFromUtf8(message);
+    PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
 
-  public PublishHandler(String topicName) {
-    this.topic = ProjectTopicName.of(PROJECT_ID, topicName);
-    this.publisher = null;
-    this.message = null;
-  }
+    // Once published, returns a server-assigned message id (unique within the topic)
+    ApiFuture<String> future = publisher.publish(pubsubMessage);
+    handleApiResponse(future);
 
-  public void publish(String message) {
-    this.message = message;
-    try {
-      sendMessageToApi();
-    } finally {
-      if (publisher != null) terminatePublisher();
+    if (publisher != null) {
+      terminate(publisher);
     }
   }
 
-  private void sendMessageToApi() {
-    try {
-      this.publisher = Publisher.newBuilder(this.topic).build();
-
-      ByteString data = ByteString.copyFromUtf8(this.message);
-      PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
-
-      // Once published, returns a server-assigned message id (unique within the topic)
-      ApiFuture<String> future = publisher.publish(pubsubMessage);
-      handleApiResponse(future);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void terminatePublisher() {
+  private static void terminate(Publisher publisher) {
     // When finished with the publisher, shutdown to free up resources.
     publisher.shutdown();
     try {
-      publisher.awaitTermination(1, TimeUnit.MINUTES);
+      // Wait for all work has completed execution after a shutdown() request, 
+      // or the timeout occurs, or the current thread is interrupted.
+      publisher.awaitTermination(10, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
   }
 
-  private void handleApiResponse(ApiFuture<String> future) {
+  private static void handleApiResponse(ApiFuture<String> future) {
     ApiFutures.addCallback(
       future,
       new ApiFutureCallback<String>() {
@@ -74,16 +58,17 @@ public class PublishHandler {
           if (throwable instanceof ApiException) {
             ApiException apiException = ((ApiException) throwable);
             // details on the API exception
-            System.out.println(apiException.getStatusCode().getCode());
-            System.out.println(apiException.isRetryable());
+            System.out.println(LOG_CONTEXT + "Failure;");
+            System.out.println(LOG_CONTEXT + apiException.getStatusCode().getCode());
+            System.out.println(LOG_CONTEXT + apiException.isRetryable());
           }
-          System.out.println("Error publishing message : " + message);
         }
 
         @Override
         public void onSuccess(String messageId) {
           // Once published, returns server-assigned message ids (unique within the topic)
-          System.out.println(messageId);
+          System.out.println(LOG_CONTEXT + "Success;");
+          System.out.println(LOG_CONTEXT + "Message ID - " + messageId);
         }
       },
       MoreExecutors.directExecutor()
