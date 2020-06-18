@@ -14,24 +14,32 @@
 
 package com.google.sps.servlets;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import com.google.sps.servlets.models.Comment;
+import com.google.sps.servlets.models.CommentReader;
+import com.google.sps.servlets.models.PubSubUtils;
 import com.google.sps.servlets.models.RequestData;
-import java.io.IOException;
+
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
-
-import javax.servlet.annotation.MultipartConfig;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseToken;
-import com.google.firebase.auth.FirebaseAuthException;
+import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/comment")
 @MultipartConfig 
 public class CommentServlet extends HttpServlet {
+  private final static Logger LOGGER = Logger.getLogger(CommentServlet.class.getName());
+
+  private static final String TOPIC_NAME = "comment-updates";
 
   public CommentServlet() {
     FirebaseApp.initializeApp();
@@ -40,7 +48,7 @@ public class CommentServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
-    List<Comment> comments = Comment.getAll();
+    List<Comment> comments = CommentReader.getAll();
     String json = Comment.convertToJson(comments);
     response.getWriter().print(json);
   }
@@ -51,11 +59,16 @@ public class CommentServlet extends HttpServlet {
     String tokenId = request.getParameter("id");
     try {
       String userId = verifyAndGetUserId(tokenId);
-      boolean isSucceeded = Comment.insertOne(userId, requestData);
-      if (isSucceeded) doGet(request, response);
-      else response.getWriter().print("Failed to post comment. Please try again");
+      String responseJson = CommentReader.insertOne(userId, requestData);
+      if (responseJson.startsWith("Failed")) {
+        response.getWriter().print(responseJson);
+      } else {
+        PubSubUtils.publish(TOPIC_NAME, responseJson);
+      }
     } catch (FirebaseAuthException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
+    } catch (NoSuchElementException e) {
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     }
   }
 
@@ -64,11 +77,14 @@ public class CommentServlet extends HttpServlet {
     String tokenId = request.getParameter("id");
     try {
       String userId = verifyAndGetUserId(tokenId);
-      boolean isSucceeded = Comment.deleteAll(userId);
-      if (isSucceeded) doGet(request, response);
-      else response.getWriter().print("Failed to delete comments. Please try again");
+      String responseJson = CommentReader.deleteAll(userId);
+      if (responseJson.startsWith("Failed")) {
+        response.getWriter().print(responseJson);
+      } else {
+        PubSubUtils.publish(TOPIC_NAME, responseJson);
+      }
     } catch (FirebaseAuthException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     }
   }
 

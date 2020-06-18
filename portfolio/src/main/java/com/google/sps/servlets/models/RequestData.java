@@ -1,20 +1,23 @@
 package com.google.sps.servlets.models;
 
-import com.google.appengine.api.datastore.Entity;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collection;
-import java.util.stream.Collectors;
 import com.google.sps.servlets.exceptions.InvalidMultipartRequest;
-import javax.servlet.ServletException;
-import javax.servlet.http.Part;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import org.apache.commons.io.IOUtils;
-import java.io.InputStream;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class RequestData {
+  private final static Logger LOGGER = Logger.getLogger(RequestData.class.getName());
+
   private final Map<String, String> data;
 
   public RequestData(HttpServletRequest request) throws IOException {
@@ -22,9 +25,9 @@ public class RequestData {
     try {
       validatedData = this.validateMultipart(request);
     } catch (ServletException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     } catch (InvalidMultipartRequest e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     } finally {
       this.data = validatedData;
     }
@@ -36,7 +39,7 @@ public class RequestData {
       return value;
     } else {
       throw new NoSuchElementException(
-        key + " does not exist in the map or its value is null"
+        String.format("%s does not exist in the map or its value is null", key)
       );
     }
   }
@@ -48,7 +51,7 @@ public class RequestData {
     if (contentType != null && contentType.startsWith("multipart/")) {
       return this.convertPartsToMap(request.getParts());
     } else {  
-      throw new InvalidMultipartRequest("Invalid content type: " + contentType);
+      throw new InvalidMultipartRequest(String.format("Invalid content type: %s", contentType));
     } 
   }
 
@@ -64,7 +67,7 @@ public class RequestData {
     try {
       result = IOUtils.toString(part.getInputStream());
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     } finally {
       return result;
     }
