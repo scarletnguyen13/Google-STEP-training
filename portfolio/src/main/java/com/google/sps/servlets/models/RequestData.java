@@ -1,20 +1,19 @@
 package com.google.sps.servlets.models;
 
-import com.google.appengine.api.datastore.Entity;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collection;
-import java.util.stream.Collectors;
 import com.google.sps.servlets.exceptions.InvalidMultipartRequest;
-import javax.servlet.ServletException;
-import javax.servlet.http.Part;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import org.apache.commons.io.IOUtils;
-import java.io.InputStream;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class RequestData {
   private final static Logger LOGGER = Logger.getLogger(RequestData.class.getName());

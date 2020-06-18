@@ -1,9 +1,9 @@
 package com.google.sps.servlets.models;
 
 import com.google.appengine.api.datastore.Entity;
-import java.util.List;
-import java.util.Arrays;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 public class Comment {
   public enum Status { PUBLIC, DELETED };
