@@ -69,4 +69,10 @@ public class Comment {
     String json = gson.toJson(comments);
     return json;
   }
+  
+  public static String convertToJson(Entity comment) {
+    Gson gson = new Gson();
+    String json = gson.toJson(comment.getProperties());
+    return json;
+  }
 }

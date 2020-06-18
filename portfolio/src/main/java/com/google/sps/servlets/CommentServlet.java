@@ -15,6 +15,7 @@
 package com.google.sps.servlets;
 
 import com.google.sps.servlets.models.Comment;
+import com.google.sps.servlets.models.PubSubUtils;
 import com.google.sps.servlets.models.RequestData;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
@@ -33,6 +34,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.servlet.annotation.MultipartConfig;
 import java.util.NoSuchElementException;
@@ -44,6 +47,9 @@ import com.google.firebase.auth.FirebaseAuthException;
 @WebServlet("/comment")
 @MultipartConfig 
 public class CommentServlet extends HttpServlet {
+  private final static Logger LOGGER = Logger.getLogger(CommentServlet.class.getName());
+
+  private static final String TOPIC_NAME = "comment-updates";
 
   public CommentServlet() {
     FirebaseApp.initializeApp();
@@ -52,24 +58,7 @@ public class CommentServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
-
-    Filter publicOnlyFilter = new FilterPredicate(
-      "status", FilterOperator.EQUAL, Comment.Status.PUBLIC.name()
-    );
-    Query query = new Query("Comment")
-      .setFilter(publicOnlyFilter)
-      .addSort("timestamp", SortDirection.DESCENDING);
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
-
-    List<Comment> comments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
-      Comment comment = Comment.fromEntity(entity);
-      comments.add(comment);
-    }
-    
-    String json = Comment.convertToJson(comments);
+    String json = getAllCommentsInJson();
     response.getWriter().print(json);
   }
 
@@ -86,11 +75,13 @@ public class CommentServlet extends HttpServlet {
       );
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(commentEntity);
-      doGet(request, response);
+      
+      String commentJson = Comment.convertToJson(commentEntity);
+      PubSubUtils.publish(TOPIC_NAME, commentJson);
     } catch (FirebaseAuthException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     } catch (NoSuchElementException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     }
   }
 
@@ -109,9 +100,31 @@ public class CommentServlet extends HttpServlet {
         commentEntity.setProperty("status", Comment.Status.DELETED.name());
         datastore.put(commentEntity);
       }
-      doGet(request, response);
+      String message = String.format("{ \"message\":  \"deleted\", \"userId\": \"%s\" }", userId); 
+      PubSubUtils.publish(TOPIC_NAME, message);
     } catch (FirebaseAuthException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     }
+  }
+
+  private String getAllCommentsInJson() {
+    Filter publicOnlyFilter = new FilterPredicate(
+      "status", FilterOperator.EQUAL, Comment.Status.PUBLIC.name()
+    );
+    Query query = new Query("Comment")
+      .setFilter(publicOnlyFilter)
+      .addSort("timestamp", SortDirection.DESCENDING);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    List<Comment> comments = new ArrayList<>();
+    for (Entity entity : results.asIterable()) {
+      Comment comment = Comment.fromEntity(entity);
+      comments.add(comment);
+    }
+    
+    String json = Comment.convertToJson(comments);
+    return json;
   }
 }

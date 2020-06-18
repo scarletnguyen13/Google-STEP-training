@@ -27,6 +27,6 @@ loadScript('./scripts/views/menu_satellites.js');
 loadScript('./scripts/views/portfolio_tags.js');
 loadScript('./scripts/views/contact_icons.js');
 loadScript('./scripts/views/forms/forms.js');
+loadScript('./scripts/controllers/auth_controller.js');
 loadScript('./scripts/controllers/forms_controller.js');
 loadScript('./scripts/controllers/comments_controller.js');
-loadScript('./scripts/controllers/auth_controller.js');

@@ -67,4 +67,24 @@ slider.oninput = function() {
   renderCommentList(commentList.slice(0, this.value));
 };
 
+const changeCommentListFormat = () => {
+  setSliderProps();
+  formatCommentHeaderText(slider.value, commentList.length);
+  renderCommentList(commentList.slice(0, slider.value));
+}
+
+const url = 'https://socket-dot-scarletnguyen-step-2020.uk.r.appspot.com/';
+const socket = io.connect(url);
+socket.on("comment-updates", newComment => {
+  if (newComment !== undefined) {
+    if (newComment.userId !== undefined && newComment.message === "deleted") {
+      const userId = newComment.deleted;
+      commentList = commentList.filter(comment => comment.userId !== userId);
+    } else {
+      commentList.unshift(newComment);
+    }
+    changeCommentListFormat();
+  } 
+});
+
 export { requestComments };
