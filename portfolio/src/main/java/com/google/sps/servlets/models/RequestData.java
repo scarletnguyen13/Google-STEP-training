@@ -13,8 +13,12 @@ import java.io.IOException;
 import org.apache.commons.io.IOUtils;
 import java.io.InputStream;
 import java.util.NoSuchElementException;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class RequestData {
+  private final static Logger LOGGER = Logger.getLogger(RequestData.class.getName());
+
   private final Map<String, String> data;
 
   public RequestData(HttpServletRequest request) throws IOException {
@@ -22,9 +26,9 @@ public class RequestData {
     try {
       validatedData = this.validateMultipart(request);
     } catch (ServletException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     } catch (InvalidMultipartRequest e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     } finally {
       this.data = validatedData;
     }
@@ -36,7 +40,7 @@ public class RequestData {
       return value;
     } else {
       throw new NoSuchElementException(
-        key + " does not exist in the map or its value is null"
+        String.format("%s does not exist in the map or its value is null", key)
       );
     }
   }
@@ -48,7 +52,7 @@ public class RequestData {
     if (contentType != null && contentType.startsWith("multipart/")) {
       return this.convertPartsToMap(request.getParts());
     } else {  
-      throw new InvalidMultipartRequest("Invalid content type: " + contentType);
+      throw new InvalidMultipartRequest(String.format("Invalid content type: %s", contentType));
     } 
   }
 
@@ -64,7 +68,7 @@ public class RequestData {
     try {
       result = IOUtils.toString(part.getInputStream());
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     } finally {
       return result;
     }

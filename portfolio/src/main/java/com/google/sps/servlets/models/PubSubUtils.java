@@ -16,10 +16,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.io.IOException;
 import java.lang.InterruptedException;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
-public class PubSubHandler {
+public class PubSubUtils {
+  private final static Logger LOGGER = Logger.getLogger(PubSubUtils.class.getName());
+
   private static final String PROJECT_ID = "scarletnguyen-step-2020";
-  private static final String LOG_CONTEXT = "(JAVA SERVER) PUBSUB HANDLER LOG: ";
 
   public static void publish(String topicName, String message) throws IOException {
     ProjectTopicName topic = ProjectTopicName.of(PROJECT_ID, topicName);
@@ -44,7 +47,7 @@ public class PubSubHandler {
       // or the timeout occurs, or the current thread is interrupted.
       publisher.awaitTermination(10, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LOGGER.log(Level.SEVERE, e.toString(), e);
     }
   }
 
@@ -58,17 +61,14 @@ public class PubSubHandler {
           if (throwable instanceof ApiException) {
             ApiException apiException = ((ApiException) throwable);
             // details on the API exception
-            System.out.println(LOG_CONTEXT + "Failure;");
-            System.out.println(LOG_CONTEXT + apiException.getStatusCode().getCode());
-            System.out.println(LOG_CONTEXT + apiException.isRetryable());
+            LOGGER.log(Level.SEVERE, apiException.toString(), apiException);
           }
         }
 
         @Override
         public void onSuccess(String messageId) {
           // Once published, returns server-assigned message ids (unique within the topic)
-          System.out.println(LOG_CONTEXT + "Success;");
-          System.out.println(LOG_CONTEXT + "Message ID - " + messageId);
+          LOGGER.log(Level.FINE, "Success - MessageId: {0}", messageId);
         }
       },
       MoreExecutors.directExecutor()

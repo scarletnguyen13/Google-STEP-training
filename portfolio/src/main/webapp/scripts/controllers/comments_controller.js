@@ -77,7 +77,7 @@ const url = 'https://socket-dot-scarletnguyen-step-2020.uk.r.appspot.com/';
 const socket = io.connect(url);
 socket.on("comment-updates", newComment => {
   if (newComment !== undefined) {
-    if (newComment.deleted !== undefined) {
+    if (newComment.userId !== undefined && newComment.message === "deleted") {
       const userId = newComment.deleted;
       commentList = commentList.filter(comment => comment.userId !== userId);
     } else {
