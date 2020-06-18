@@ -1,4 +1,4 @@
-package com.google.sps.servlets.models;
+package com.google.sps.models;
 
 import com.google.appengine.api.datastore.Entity;
 import java.util.List;
@@ -34,6 +34,34 @@ public class Comment {
     this.status = status;
   }
 
+  public long getId() {
+    return this.id;
+  }
+
+  public long getTimestamp() {
+    return this.timestamp;
+  }
+
+  public String getUserId() {
+    return this.userId;
+  }
+
+  public String getUsername() {
+    return this.username;
+  }
+
+  public String getContent() {
+    return this.content;
+  }
+
+  public int getLikes() {
+    return this.likes;
+  }
+
+  public String getStatus() {
+    return this.status.name();
+  }
+
   public static Comment fromEntity(Entity entity) {
     long id = entity.getKey().getId();
     long timestamp = (long) entity.getProperty("timestamp");
@@ -41,7 +69,7 @@ public class Comment {
     String username = (String) entity.getProperty("username");
     String content = (String) entity.getProperty("content");
     // Convert "likes" property to long then cast as int
-    int likes = (int) (long) entity.getProperty("likes");
+    int likes = ((Number) entity.getProperty("likes")).intValue();
     Status status = Status.valueOf((String) entity.getProperty("status"));
 
     Comment comment = new Comment(id, timestamp, userId, username, content, likes, status);

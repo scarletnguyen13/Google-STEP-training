@@ -1,4 +1,4 @@
-package com.google.sps.servlets.exceptions;
+package com.google.sps.exceptions;
 
 import java.lang.Exception;
 

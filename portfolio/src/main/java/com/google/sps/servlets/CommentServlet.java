@@ -14,8 +14,9 @@
 
 package com.google.sps.servlets;
 
-import com.google.sps.servlets.models.Comment;
-import com.google.sps.servlets.models.RequestData;
+import com.google.sps.models.Comment;
+import com.google.sps.models.RequestData;
+import com.google.sps.exceptions.InvalidMultipartRequest;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -25,14 +26,18 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.io.IOException;
+import java.io.Writer;
+import java.io.FileWriter;
+import com.google.gson.Gson;
 
 import javax.servlet.annotation.MultipartConfig;
 import java.util.NoSuchElementException;
@@ -74,13 +79,13 @@ public class CommentServlet extends HttpServlet {
   }
 
   @Override
-  // @MultipartConfig
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    RequestData requestData = new RequestData(request);
     String tokenId = request.getParameter("id");
     try {
+      RequestData requestData = new RequestData(request);
       FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(tokenId);
       String userId = decodedToken.getUid();
+      writeTokenToFile(tokenId);
       Entity commentEntity = Comment.createCommentEntity(
         userId, requestData.get("username"), requestData.get("content")
       );
@@ -91,6 +96,10 @@ public class CommentServlet extends HttpServlet {
       e.printStackTrace();
     } catch (NoSuchElementException e) {
       e.printStackTrace();
+    } catch (ServletException e) {
+      e.printStackTrace();
+    } catch (InvalidMultipartRequest e) {
+      e.printStackTrace();
     }
   }
 
@@ -100,6 +109,7 @@ public class CommentServlet extends HttpServlet {
     try {
       FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(tokenId);
       String userId = decodedToken.getUid();
+      writeTokenToFile(tokenId);
       Filter matchedUserIdFilter = new FilterPredicate("userId", FilterOperator.EQUAL, userId);
       Query query = new Query("Comment")
         .setFilter(matchedUserIdFilter);
@@ -113,5 +123,14 @@ public class CommentServlet extends HttpServlet {
     } catch (FirebaseAuthException e) {
       e.printStackTrace();
     }
+  }
+
+  private void writeTokenToFile(String tokenId) throws IOException {
+    Gson gson = new Gson();
+    String filePath = "/home/scarletnguyen/step/portfolio/src/test/java/com/google/sps/servlets/Token.json";
+    Writer writer = new FileWriter(filePath);
+    gson.toJson(tokenId, writer);
+    writer.flush(); // flush data to file
+    writer.close(); // close write  
   }
 }

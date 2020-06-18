@@ -1,11 +1,10 @@
-package com.google.sps.servlets.models;
+package com.google.sps.models;
 
 import com.google.appengine.api.datastore.Entity;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collection;
-import java.util.stream.Collectors;
-import com.google.sps.servlets.exceptions.InvalidMultipartRequest;
+import com.google.sps.exceptions.InvalidMultipartRequest;
 import javax.servlet.ServletException;
 import javax.servlet.http.Part;
 import javax.servlet.http.HttpServletRequest;
@@ -17,17 +16,15 @@ import java.util.NoSuchElementException;
 public class RequestData {
   private final Map<String, String> data;
 
-  public RequestData(HttpServletRequest request) throws IOException {
+  public RequestData(HttpServletRequest request) 
+    throws IOException, ServletException, InvalidMultipartRequest {
     Map<String, String> validatedData = new HashMap<>();
-    try {
-      validatedData = this.validateMultipart(request);
-    } catch (ServletException e) {
-      e.printStackTrace();
-    } catch (InvalidMultipartRequest e) {
-      e.printStackTrace();
-    } finally {
-      this.data = validatedData;
-    }
+    validatedData = this.validateMultipart(request);
+    this.data = validatedData;
+  }
+
+  public Map<String, String> getData() {
+    return this.data;
   }
 
   public String get(String key) {
@@ -52,21 +49,11 @@ public class RequestData {
     } 
   }
 
-  private Map<String, String> convertPartsToMap(Collection<Part> parts) {
-    return parts.stream().collect(Collectors.toMap(
-      Part::getName, 
-      part -> getStringFromInputStream(part)
-    ));
-  }
-
-  private String getStringFromInputStream(Part part) {
-    String result = null;
-    try {
-      result = IOUtils.toString(part.getInputStream());
-    } catch (IOException e) {
-      e.printStackTrace();
-    } finally {
-      return result;
+  private Map<String, String> convertPartsToMap(Collection<Part> parts) throws IOException {
+    Map<String, String> result = new HashMap();
+    for (Part part : parts) {
+      result.put(part.getName(), IOUtils.toString(part.getInputStream()));
     }
+    return result;
   }
 }
