@@ -1,5 +1,6 @@
 import { DEFAULT_COMMENT_LIST_SIZE } from '../constants.js';
 import { renderCommentList } from '../views/comments.js';
+import { displayError } from '../views/forms/utils.js';
 
 const slider = document.getElementById('comment-slider');
 let commentList = [];
@@ -39,12 +40,21 @@ const requestComments = async (method, body) => {
     url += `?id=${tokenId}`;
   }
   const response = await fetch(url, { method, body });
-  const updatedComments = await response.json();
-  if (updatedComments !== undefined) {
-    commentList = updatedComments.slice();
-    setSliderProps();
-    formatCommentHeaderText(slider.value, updatedComments.length);
-    renderCommentList(updatedComments.slice(0, slider.value));
+  const text = await response.text();
+  handleResponse(text);
+}
+
+const handleResponse = response => {
+  if (response !== undefined) {
+    if (response.startsWith("Failed")) {
+      displayError(response);
+    } else {
+      const updatedComments = JSON.parse(response);
+      commentList = updatedComments.slice();
+      setSliderProps();
+      formatCommentHeaderText(slider.value, updatedComments.length);
+      renderCommentList(updatedComments.slice(0, slider.value));
+    } 
   }
 }
 

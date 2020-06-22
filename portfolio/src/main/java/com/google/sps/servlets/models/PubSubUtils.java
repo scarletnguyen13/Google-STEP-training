@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PubSubUtils {
-  private final static Logger LOGGER = Logger.getLogger(PubSubUtils.class.getName());
+  private static Logger logger = Logger.getLogger(PubSubUtils.class.getName());
 
   private static final String PROJECT_ID = "scarletnguyen-step-2020";
 
@@ -43,7 +43,7 @@ public class PubSubUtils {
       // or the timeout occurs, or the current thread is interrupted.
       publisher.awaitTermination(10, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
-      LOGGER.log(Level.SEVERE, e.toString(), e);
+      logger.log(Level.SEVERE, e.toString(), e);
     }
   }
 
@@ -57,14 +57,14 @@ public class PubSubUtils {
           if (throwable instanceof ApiException) {
             ApiException apiException = ((ApiException) throwable);
             // details on the API exception
-            LOGGER.log(Level.SEVERE, apiException.toString(), apiException);
+            logger.log(Level.SEVERE, apiException.toString(), apiException);
           }
         }
 
         @Override
         public void onSuccess(String messageId) {
           // Once published, returns server-assigned message ids (unique within the topic)
-          LOGGER.log(Level.FINE, "Success - MessageId: {0}", messageId);
+          logger.log(Level.FINE, "Success - MessageId: {0}", messageId);
         }
       },
       MoreExecutors.directExecutor()
