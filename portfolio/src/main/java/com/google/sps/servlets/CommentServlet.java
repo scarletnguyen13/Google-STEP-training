@@ -37,18 +37,20 @@ import java.util.logging.Logger;
 @WebServlet("/comment")
 @MultipartConfig 
 public class CommentServlet extends HttpServlet {
-  private final static Logger LOGGER = Logger.getLogger(CommentServlet.class.getName());
-
   private static final String TOPIC_NAME = "comment-updates";
+  private Logger logger;
+  private CommentReader commentReader;
 
   public CommentServlet() {
     FirebaseApp.initializeApp();
+    commentReader = new CommentReader();
+    logger = Logger.getLogger(CommentServlet.class.getName());
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
-    List<Comment> comments = CommentReader.getAll();
+    List<Comment> comments = commentReader.getAll();
     String json = Comment.convertToJson(comments);
     response.getWriter().print(json);
   }
@@ -57,34 +59,34 @@ public class CommentServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     RequestData requestData = new RequestData(request);
     String tokenId = request.getParameter("id");
+    String errorMessage = "Failed to post comment.";
     try {
       String userId = verifyAndGetUserId(tokenId);
-      String responseJson = CommentReader.insertOne(userId, requestData);
-      if (responseJson.startsWith("Failed")) {
-        response.getWriter().print(responseJson);
-      } else {
-        PubSubUtils.publish(TOPIC_NAME, responseJson);
-      }
+      String responseJson = commentReader.insertOne(userId, requestData);
+      PubSubUtils.publish(TOPIC_NAME, responseJson);
     } catch (FirebaseAuthException e) {
-      LOGGER.log(Level.SEVERE, e.toString(), e);
+      logger.log(Level.SEVERE, e.toString(), e);
+      response.getWriter().print(errorMessage);
     } catch (NoSuchElementException e) {
-      LOGGER.log(Level.SEVERE, e.toString(), e);
+      logger.log(Level.SEVERE, e.toString(), e);
+      response.getWriter().print(errorMessage);
     }
   }
 
   @Override
   public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String tokenId = request.getParameter("id");
+    String errorMessage = "Failed to delete all comments.";
     try {
       String userId = verifyAndGetUserId(tokenId);
-      String responseJson = CommentReader.deleteAll(userId);
-      if (responseJson.startsWith("Failed")) {
-        response.getWriter().print(responseJson);
-      } else {
-        PubSubUtils.publish(TOPIC_NAME, responseJson);
-      }
+      String responseJson = commentReader.deleteAll(userId);
+      PubSubUtils.publish(TOPIC_NAME, responseJson);
     } catch (FirebaseAuthException e) {
-      LOGGER.log(Level.SEVERE, e.toString(), e);
+      logger.log(Level.SEVERE, e.toString(), e);
+      response.getWriter().print(errorMessage);
+    } catch (Exception e) {
+      logger.log(Level.SEVERE, e.toString(), e);
+      response.getWriter().print(errorMessage);
     }
   }
 

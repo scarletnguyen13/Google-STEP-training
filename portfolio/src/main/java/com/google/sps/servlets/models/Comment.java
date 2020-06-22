@@ -61,12 +61,15 @@ public class Comment {
     return commentEntity;
   }
 
+  /**
+   * Converts a ServerStats instance into a JSON string using the Gson library.
+   */
   public static String convertToJson(List<Comment> comments) {
     Gson gson = new Gson();
     String json = gson.toJson(comments);
     return json;
   }
-
+  
   public static String convertToJson(Entity comment) {
     Gson gson = new Gson();
     String json = gson.toJson(comment.getProperties());

@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class RequestData {
-  private final static Logger LOGGER = Logger.getLogger(RequestData.class.getName());
+  private static Logger logger = Logger.getLogger(RequestData.class.getName());
 
   private final Map<String, String> data;
 
@@ -25,9 +25,9 @@ public class RequestData {
     try {
       validatedData = this.validateMultipart(request);
     } catch (ServletException e) {
-      LOGGER.log(Level.SEVERE, e.toString(), e);
+      logger.log(Level.SEVERE, e.toString(), e);
     } catch (InvalidMultipartRequest e) {
-      LOGGER.log(Level.SEVERE, e.toString(), e);
+      logger.log(Level.SEVERE, e.toString(), e);
     } finally {
       this.data = validatedData;
     }
@@ -67,7 +67,7 @@ public class RequestData {
     try {
       result = IOUtils.toString(part.getInputStream());
     } catch (IOException e) {
-      LOGGER.log(Level.SEVERE, e.toString(), e);
+      logger.log(Level.SEVERE, e.toString(), e);
     } finally {
       return result;
     }
